@@ -165,5 +165,4 @@ public class AdminServiceImpl implements AdminService {
 		List<Agent> list = agentRepository.findByAgencyId(agency2.getId());
 		return list;
 	}
-
 }

@@ -13,7 +13,5 @@ import com.realestate.main.entity.Role;
 public interface AgencyRepository extends JpaRepository<Agency, Integer>{
 
 	Optional<Agency> findByEmail(String email);
-
 	Optional<Agency> findByAgencyName(String agencyName);
-
 }

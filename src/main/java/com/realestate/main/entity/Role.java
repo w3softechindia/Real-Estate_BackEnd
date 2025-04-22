@@ -1,7 +1,6 @@
 package com.realestate.main.entity;
 
 import java.io.Serializable;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
