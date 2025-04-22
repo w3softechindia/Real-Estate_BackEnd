@@ -1,6 +1,9 @@
 package com.realestate.main.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +17,14 @@ import lombok.Setter;
 public class Customer extends RealEStateUser{
 	
 	private String address;
+	private String customerName;
 	private int pincode;
 	private String city;
 	private String state;
+	
+	@ManyToOne
+	@JsonBackReference
+	private Agent agent;
+	
+	private long agencyId;
 }
