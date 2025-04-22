@@ -60,19 +60,19 @@ public class JwtServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Admin admin = adminRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Email not found..!!"));
-		if(admin!=null) return admin;
-		
-		Agency agency = agencyRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Email not found..!!"));
-		if(agency!=null) return agency;
-		
-		Agent agent = agentRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Email not found..!!"));
-		if(agent!=null) return agent;
-		
-		Customer customer = customerRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Email not found..!!"));
-		if(customer!=null) return customer;
-		
-		throw new UsernameNotFoundException("User Not found..!!!");
+	    Agency agency = agencyRepository.findByEmail(email).orElse(null);
+	    if (agency != null) return agency;
+
+	    Admin admin = adminRepository.findByEmail(email).orElse(null);
+	    if (admin != null) return admin;
+
+	    Agent agent = agentRepository.findByEmail(email).orElse(null);
+	    if (agent != null) return agent;
+
+	    Customer customer = customerRepository.findByEmail(email).orElse(null);
+	    if (customer != null) return customer;
+
+	    throw new UsernameNotFoundException("User not found with email: " + email);
 	}
 
 	private void authenticate(String email, String password) throws Exception {
