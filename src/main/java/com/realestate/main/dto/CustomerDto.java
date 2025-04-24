@@ -1,32 +1,30 @@
-package com.realestate.main.entity;
+package com.realestate.main.dto;
 
 import java.time.LocalDate;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.Set;
+import com.realestate.main.entity.Agent;
+import com.realestate.main.entity.Role;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Customer extends RealEStateUser{
+public class CustomerDto {
 	
+	private long id;
+	private String email;
+	private String password;
+	private String phoneNumber;
+	private Set<Role> roles;
 	private String address;
 	private String customerName;
 	private int pincode;
 	private String city;
 	private String state;
 	private LocalDate registrationDate;
-	
-	@ManyToOne
-	@JsonBackReference
 	private Agent agent;
-	
 	private long agencyId;
 }

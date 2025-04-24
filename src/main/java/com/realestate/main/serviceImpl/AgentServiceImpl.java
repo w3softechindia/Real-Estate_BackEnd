@@ -1,5 +1,6 @@
 package com.realestate.main.serviceImpl;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Role;
 import com.realestate.main.exceptions.RoleNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
+import com.realestate.main.mapper.UserMapper;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.RoleRepository;
@@ -30,9 +33,12 @@ public class AgentServiceImpl implements AgentService {
 	private RoleRepository roleRepository;
 
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+	
+	@Autowired
+	private UserMapper userMapper;
 
 	@Override
-	public Customer addCustomer(String agentEmail, Customer customer)
+	public CustomerDto addCustomer(String agentEmail, Customer customer)
 			throws UserNotFoundException, RoleNotFoundException {
 		// Set Role
 		Set<Role> roles = new HashSet<Role>();
@@ -46,11 +52,15 @@ public class AgentServiceImpl implements AgentService {
 				.orElseThrow(() -> new UserNotFoundException("Agent not found with email :" + agentEmail));
 		customer.setAgencyId(agent2.getId());
 		customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
-		return customerRepository.save(customer);
+		customer.setRegistrationDate(LocalDate.now());
+		Customer save = customerRepository.save(customer);
+		
+		CustomerDto customerDto = userMapper.toCustomerDto(save);
+		return customerDto;
 	}
 
 	@Override
-	public Customer updateCustomer(String email, Customer customer) throws UserNotFoundException {
+	public CustomerDto updateCustomer(String email, Customer customer) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		Customer customer2 = customerRepository.findByEmail(email)
 				.orElseThrow(() -> new UserNotFoundException("Customer Not found with :" + email));
@@ -60,15 +70,20 @@ public class AgentServiceImpl implements AgentService {
 		customer2.setPhoneNumber(customer.getPhoneNumber());
 		customer2.setPincode(customer.getPincode());
 		customer2.setState(customer.getState());
-		return customerRepository.save(customer2);
+		Customer customer3 = customerRepository.save(customer2);
+		
+		CustomerDto customerDto = userMapper.toCustomerDto(customer3);
+		return customerDto;
 	}
 
 	@Override
-	public Customer getCustomer(String email) throws UserNotFoundException {
+	public CustomerDto getCustomer(String email) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		Customer customer2 = customerRepository.findByEmail(email)
 				.orElseThrow(() -> new UserNotFoundException("Customer Not found with :" + email));
-		return customer2;
+		
+		CustomerDto customerDto = userMapper.toCustomerDto(customer2);
+		return customerDto;
 	}
 
 }

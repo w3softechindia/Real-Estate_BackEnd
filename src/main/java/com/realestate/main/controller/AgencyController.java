@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.realestate.main.dto.AgentDto;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.service.AgencyService;
@@ -24,23 +25,23 @@ public class AgencyController {
 	
 	@PreAuthorize("hasRole('Agency')")
 	@PostMapping("/addAgent")
-	public ResponseEntity<Agent> addAgent(@RequestParam String email,@RequestBody Agent agent) throws UserNotFoundException {
-		Agent agent2 = agencyService.addAgent(email,agent);
-		return new ResponseEntity<Agent>(agent2, HttpStatus.OK);
+	public ResponseEntity<AgentDto> addAgent(@RequestParam String email,@RequestBody Agent agent) throws UserNotFoundException {
+		AgentDto agent2 = agencyService.addAgent(email,agent);
+		return new ResponseEntity<AgentDto>(agent2, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('Agency')")
 	@PutMapping("/updateAgent")
-	public ResponseEntity<Agent>  updateAgent(@RequestParam String email,@RequestBody Agent agent) throws UserNotFoundException {
-		Agent updateAgent = agencyService.updateAgent(email, agent);
-		return new ResponseEntity<Agent>(updateAgent, HttpStatus.OK);
+	public ResponseEntity<AgentDto>  updateAgent(@RequestParam String email,@RequestBody Agent agent) throws UserNotFoundException {
+		AgentDto updateAgent = agencyService.updateAgent(email, agent);
+		return new ResponseEntity<AgentDto>(updateAgent, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasAnyRole('Agency','Agent')")
 	@GetMapping("/getAgent")
-	public ResponseEntity<Agent> getAgent(@RequestParam String email) throws UserNotFoundException {
-		Agent agent = agencyService.getAgent(email);
-		return new ResponseEntity<Agent>(agent, HttpStatus.OK);
+	public ResponseEntity<AgentDto> getAgent(@RequestParam String email) throws UserNotFoundException {
+		AgentDto agent = agencyService.getAgent(email);
+		return new ResponseEntity<AgentDto>(agent, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('Agency')")

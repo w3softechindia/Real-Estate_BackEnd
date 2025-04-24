@@ -1,5 +1,6 @@
 package com.realestate.main.entity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -28,8 +29,9 @@ public class Agency extends RealEStateUser{
 	private String fbUrl;
 	private String instagramUrl;
 	private String twitterUrl;
+	private LocalDate registrationDate;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "agency")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "agency")
 	@JsonManagedReference
 	private List<Agent> agents;
 }

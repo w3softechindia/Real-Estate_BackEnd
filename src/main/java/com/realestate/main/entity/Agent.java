@@ -1,5 +1,6 @@
 package com.realestate.main.entity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -27,6 +28,7 @@ public class Agent extends RealEStateUser{
 	private int pincode;
 	private String city;
 	private String state;
+	private LocalDate registrationDate;
 	
 	@ManyToOne
 	@JsonBackReference
