@@ -33,7 +33,7 @@ public interface AdminService {
 	List<CustomerDto> getAllCustomers();
 	
 	List<CustomerDto> getCustomersByAgency(String agencyName) throws UserNotFoundException;
-	
+
 	List<AgentDto> getAllAgents();
 	
 	List<AgentDto> getAgentsByAgency(String agencyName) throws UserNotFoundException;
