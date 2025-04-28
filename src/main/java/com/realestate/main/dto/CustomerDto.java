@@ -2,6 +2,8 @@ package com.realestate.main.dto;
 
 import java.time.LocalDate;
 import java.util.Set;
+
+import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Role;
 
@@ -26,5 +28,5 @@ public class CustomerDto {
 	private String state;
 	private LocalDate registrationDate;
 	private Agent agent;
-	private long agencyId;
+	private String agencyName;
 }

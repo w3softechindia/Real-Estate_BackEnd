@@ -28,5 +28,5 @@ public class Customer extends RealEStateUser{
 	@JsonBackReference
 	private Agent agent;
 	
-	private long agencyId;
+	private String agencyName;
 }

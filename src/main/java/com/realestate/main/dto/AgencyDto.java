@@ -31,4 +31,5 @@ public class AgencyDto {
 	private String twitterUrl;
 	private LocalDate registrationDate;
 	private List<Agent> agents;
+	private String status;
 }
