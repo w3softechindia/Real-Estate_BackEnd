@@ -30,6 +30,7 @@ public class Agency extends RealEStateUser{
 	private String instagramUrl;
 	private String twitterUrl;
 	private LocalDate registrationDate;
+	private String status;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "agency")
 	@JsonManagedReference

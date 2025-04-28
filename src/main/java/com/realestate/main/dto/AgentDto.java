@@ -28,6 +28,7 @@ public class AgentDto {
 	private String city;
 	private String state;
 	private LocalDate registrationDate;
-//	private Agency agency;
-//	private List<Customer> customers;
+	private Agency agency;
+	private List<Customer> customers;
+	private String status;
 }

@@ -50,7 +50,8 @@ public class AgentServiceImpl implements AgentService {
 		// Find Agent and Set Agent
 		Agent agent2 = agentRepository.findByEmail(agentEmail)
 				.orElseThrow(() -> new UserNotFoundException("Agent not found with email :" + agentEmail));
-		customer.setAgencyId(agent2.getId());
+		customer.setAgent(agent2);
+		customer.setAgencyName(agent2.getAgency().getAgencyName());
 		customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
 		customer.setRegistrationDate(LocalDate.now());
 		Customer save = customerRepository.save(customer);

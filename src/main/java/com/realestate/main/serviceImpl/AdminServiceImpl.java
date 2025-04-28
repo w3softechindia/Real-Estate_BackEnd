@@ -184,7 +184,7 @@ public class AdminServiceImpl implements AdminService {
 		// TODO Auto-generated method stub
 		Agency agency2 = agencyRepository.findByAgencyName(agencyName)
 				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + agencyName));
-		List<Customer> byAgency = customerRepository.findByAgencyId(agency2.getId());
+		List<Customer> byAgency = customerRepository.findByAgencyName(agency2.getAgencyName());
 
 		List<CustomerDto> collect = byAgency.stream().map(userMapper::toCustomerDto)
 				.collect(Collectors.toList());

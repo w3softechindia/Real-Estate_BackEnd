@@ -29,6 +29,7 @@ public class Agent extends RealEStateUser{
 	private String city;
 	private String state;
 	private LocalDate registrationDate;
+	private String status;
 	
 	@ManyToOne
 	@JsonBackReference
