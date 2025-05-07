@@ -104,7 +104,7 @@ public class AdminController {
 		return new ResponseEntity<List<CustomerDto>>(customersByAgency, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasRole('Admin')")
+	@PreAuthorize("hasRole('Admin') or hasRole('Agency')")
 	@GetMapping("/getAllAgents")
 	public ResponseEntity<List<AgentDto>> getAllAgents() {
 		List<AgentDto> allAgents = adminService.getAllAgents();
