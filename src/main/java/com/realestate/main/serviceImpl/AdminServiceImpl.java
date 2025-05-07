@@ -14,11 +14,17 @@ import com.realestate.main.dto.AdminDto;
 import com.realestate.main.dto.AgencyDto;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
+import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
+import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.PropertyStatus;
 import com.realestate.main.entity.Role;
+import com.realestate.main.entity.Venture;
+import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.mapper.UserMapper;
 
@@ -26,7 +32,9 @@ import com.realestate.main.repository.AdminRepository;
 import com.realestate.main.repository.AgencyRepository;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
+import com.realestate.main.repository.PlotsRepository;
 import com.realestate.main.repository.RoleRepository;
+import com.realestate.main.repository.VentureRepository;
 import com.realestate.main.service.AdminService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -48,10 +56,16 @@ public class AdminServiceImpl implements AdminService {
 	private CustomerRepository customerRepository;
 
 	@Autowired
+	private VentureRepository ventureRepository;
+
+	@Autowired
 	private AgentRepository agentRepository;
 
+	@Autowired
+	private PlotsRepository plotsRepository;
+
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
-	
+
 	@Autowired
 	private UserMapper userMapper;
 
@@ -102,7 +116,7 @@ public class AdminServiceImpl implements AdminService {
 		agency.setRegistrationDate(LocalDate.now());
 		Agency agency2 = agencyRepository.save(agency);
 		log.info("Agency created successfully..!!");
-		
+
 		AgencyDto agencyDto = userMapper.toAgencyDto(agency2);
 		log.info("Converted into AgencyDto..!!");
 		return agencyDto;
@@ -118,7 +132,7 @@ public class AdminServiceImpl implements AdminService {
 		admin2.setPhoneNumber(admin.getPhoneNumber());
 		Admin admin3 = adminRepository.save(admin2);
 		log.info("Admin Updated successfully..!!");
-		
+
 		AdminDto adminDto = userMapper.toAdminDto(admin3);
 		log.info("Converted into AdminDto..!!");
 		return adminDto;
@@ -174,8 +188,7 @@ public class AdminServiceImpl implements AdminService {
 		// TODO Auto-generated method stub
 		List<Customer> all = customerRepository.findAll();
 
-		List<CustomerDto> collect = all.stream().map(userMapper::toCustomerDto)
-				.collect(Collectors.toList());
+		List<CustomerDto> collect = all.stream().map(userMapper::toCustomerDto).collect(Collectors.toList());
 		return collect;
 	}
 
@@ -186,8 +199,7 @@ public class AdminServiceImpl implements AdminService {
 				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + agencyName));
 		List<Customer> byAgency = customerRepository.findByAgencyName(agency2.getAgencyName());
 
-		List<CustomerDto> collect = byAgency.stream().map(userMapper::toCustomerDto)
-				.collect(Collectors.toList());
+		List<CustomerDto> collect = byAgency.stream().map(userMapper::toCustomerDto).collect(Collectors.toList());
 		return collect;
 	}
 
@@ -195,8 +207,7 @@ public class AdminServiceImpl implements AdminService {
 	public List<AgentDto> getAllAgents() {
 		// TODO Auto-generated method stub
 		List<Agent> all = agentRepository.findAll();
-		List<AgentDto> collect = all.stream().map(userMapper::toAgentDto)
-				.collect(Collectors.toList());
+		List<AgentDto> collect = all.stream().map(userMapper::toAgentDto).collect(Collectors.toList());
 		return collect;
 	}
 
@@ -207,17 +218,120 @@ public class AdminServiceImpl implements AdminService {
 				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + agencyName));
 		List<Agent> list = agentRepository.findByAgencyId(agency2.getId());
 
-		List<AgentDto> collect = list.stream().map(userMapper::toAgentDto)
-				.collect(Collectors.toList());
+		List<AgentDto> collect = list.stream().map(userMapper::toAgentDto).collect(Collectors.toList());
 		return collect;
 	}
 
 	@Override
 	public List<AgencyDto> getAllAgencies() {
 		// TODO Auto-generated method stub
-		 List<Agency> all = agencyRepository.findAll();
-		 
-		 List<AgencyDto> collect = all.stream().map(userMapper::toAgencyDto).collect(Collectors.toList());
-		 return collect;
+		List<Agency> all = agencyRepository.findAll();
+
+		List<AgencyDto> collect = all.stream().map(userMapper::toAgencyDto).collect(Collectors.toList());
+		return collect;
+	}
+
+	@Override
+	public VentureDto addVenture(Venture venture) {
+		// TODO Auto-generated method stub
+		Venture save = ventureRepository.save(venture);
+		for (Plots plot : venture.getPlots()) {
+//			plot.setStatus(PropertyStatus.AVAILABLE);
+			plot.setVenture(save);
+			plotsRepository.save(plot);
+		}
+		VentureDto landPropertyDto = userMapper.toVentureDto(save);
+		return landPropertyDto;
+	}
+
+	@Override
+	public VentureDto updateVenture(long id, Venture landProperty) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		Venture property = ventureRepository.findById(id)
+				.orElseThrow(() -> new PropertyNotFoundException("Property not found with Id :" + id));
+		property.setVentureName(landProperty.getVentureName());
+		property.setAddress(landProperty.getAddress());
+		property.setPhno(landProperty.getPhno());
+
+		Venture landProperty2 = ventureRepository.save(property);
+		VentureDto landPropertyDto = userMapper.toVentureDto(landProperty2);
+
+		return landPropertyDto;
+	}
+
+	@Override
+	public VentureDto getVenture(long id) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		Venture property = ventureRepository.findById(id)
+				.orElseThrow(() -> new PropertyNotFoundException("Property not found with Id :" + id));
+		VentureDto landPropertyDto = userMapper.toVentureDto(property);
+		return landPropertyDto;
+	}
+
+	@Override
+	public List<VentureDto> getAllVentures() {
+		// TODO Auto-generated method stub
+		List<Venture> list = ventureRepository.findAll();
+		List<VentureDto> collect = list.stream().map(userMapper::toVentureDto).collect(Collectors.toList());
+		return collect;
+	}
+
+	@Override
+	public PlotsDto addPlot(long ventureId, Plots plots) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		Venture property = ventureRepository.findById(ventureId)
+				.orElseThrow(() -> new PropertyNotFoundException("Property not found with Id :" + ventureId));
+		plots.setVenture(property);
+		Plots plots2 = plotsRepository.save(plots);
+		PlotsDto pLotsDto = userMapper.toPLotsDto(plots2);
+		return pLotsDto;
+	}
+
+	@Override
+	public List<PlotsDto> addAllPlots(long ventureId, List<Plots> plots) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		Venture venture = ventureRepository.findById(ventureId)
+				.orElseThrow(() -> new PropertyNotFoundException("Property not found with Id :" + ventureId));
+		List<Plots> collect = plots.stream().peek((plot) -> plot.setVenture(venture))
+				.collect(Collectors.toList());
+		
+		List<Plots> list = plotsRepository.saveAll(collect);
+
+		return list.stream().map(userMapper::toPLotsDto).collect(Collectors.toList());
+	}
+
+	@Override
+	public PlotsDto updatePlot(long plotId, Plots plots) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		Plots plots2 = plotsRepository.findById(plotId)
+				.orElseThrow(() -> new PropertyNotFoundException("Plot not found with Id :" + plotId));
+		plots2.setPlotNumber(plots.getPlotNumber());
+		plots2.setPlotSize(plots.getPlotSize());
+		plots2.setPrice(plots.getPrice());
+		plots2.setStatus(plots.getStatus());
+		plots2.setLocation(plots.getLocation());
+		plots2.setFacing(plots.getFacing());
+		plots2.setCornerPlot(plots.isCornerPlot());
+
+		Plots save = plotsRepository.save(plots2);
+		PlotsDto pLotsDto = userMapper.toPLotsDto(save);
+		return pLotsDto;
+	}
+
+	@Override
+	public PlotsDto getPlot(long plotId) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		Plots plots2 = plotsRepository.findById(plotId)
+				.orElseThrow(() -> new PropertyNotFoundException("Plot not found with Id :" + plotId));
+		return userMapper.toPLotsDto(plots2);
+	}
+
+	@Override
+	public String deletePlot(long plotId) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		Plots plots2 = plotsRepository.findById(plotId)
+				.orElseThrow(() -> new PropertyNotFoundException("Plot not found with Id :" + plotId));
+		plotsRepository.delete(plots2);
+		return "Plot deleted..!!";
 	}
 }
