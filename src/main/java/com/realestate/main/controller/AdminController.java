@@ -111,7 +111,7 @@ public class AdminController {
 		return new ResponseEntity<List<AgentDto>>(allAgents, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole('Admin','Agency')")
+	@PreAuthorize("hasRole('Admin') or hasRole('Agency')")
 	@GetMapping("/getAgentsByAgency")
 	public ResponseEntity<List<AgentDto>> getAgentsByAgency(String agencyName) throws UserNotFoundException{
 		List<AgentDto> agentsByAgency = adminService.getAgentsByAgency(agencyName);
