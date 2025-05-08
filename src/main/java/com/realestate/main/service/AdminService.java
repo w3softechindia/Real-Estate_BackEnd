@@ -6,8 +6,13 @@ import com.realestate.main.dto.AdminDto;
 import com.realestate.main.dto.AgencyDto;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
+import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
+import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.Venture;
+import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 
 public interface AdminService {
@@ -37,4 +42,22 @@ public interface AdminService {
 	List<AgentDto> getAllAgents();
 	
 	List<AgentDto> getAgentsByAgency(String agencyName) throws UserNotFoundException;
+	
+	VentureDto addVenture(Venture venture);
+	
+	VentureDto updateVenture(long id, Venture venture) throws PropertyNotFoundException;
+	
+	VentureDto getVenture(long id) throws PropertyNotFoundException;
+	
+	List<VentureDto> getAllVentures();
+	
+	PlotsDto addPlot(long ventureId, Plots plots) throws PropertyNotFoundException;
+	
+	List<PlotsDto> addAllPlots(long ventureId, List<Plots> plots) throws PropertyNotFoundException;
+	
+	PlotsDto updatePlot(long plotId, Plots plots) throws PropertyNotFoundException;
+	
+	PlotsDto getPlot(long plotId) throws PropertyNotFoundException;
+	
+	String deletePlot(long plotId) throws PropertyNotFoundException;
 }
