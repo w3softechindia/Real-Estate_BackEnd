@@ -7,10 +7,14 @@ import com.realestate.main.dto.AdminDto;
 import com.realestate.main.dto.AgencyDto;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
+import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
+import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.Venture;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -24,4 +28,8 @@ public interface UserMapper {
 	AgentDto toAgentDto(Agent agent);
 	
 	CustomerDto toCustomerDto(Customer customer);
+	
+	VentureDto toVentureDto(Venture venture);
+	
+	PlotsDto toPLotsDto(Plots plots);
 }
