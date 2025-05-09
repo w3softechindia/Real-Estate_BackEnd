@@ -21,7 +21,7 @@ import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Plots;
-import com.realestate.main.entity.PropertyStatus;
+import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.exceptions.PropertyNotFoundException;
@@ -33,6 +33,7 @@ import com.realestate.main.repository.AgencyRepository;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.PlotsRepository;
+import com.realestate.main.repository.RealEstateUserRepo;
 import com.realestate.main.repository.RoleRepository;
 import com.realestate.main.repository.VentureRepository;
 import com.realestate.main.service.AdminService;
@@ -42,6 +43,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class AdminServiceImpl implements AdminService {
+	
+	@Autowired
+	private RealEstateUserRepo userRepo;
 
 	@Autowired
 	private AdminRepository adminRepository;
@@ -158,6 +162,11 @@ public class AdminServiceImpl implements AdminService {
 		agency2.setAgencyPinCode(agency.getAgencyPinCode());
 		agency2.setEmail(agency.getEmail());
 		agency2.setPhoneNumber(agency.getPhoneNumber());
+		agency2.setCity(agency.getCity());
+		agency2.setFbUrl(agency.getFbUrl());
+		agency2.setInstagramUrl(agency.getInstagramUrl());
+		agency2.setTwitterUrl(agency.getTwitterUrl());
+		agency2.setState(agency.getState());
 		Agency agency3 = agencyRepository.save(agency2);
 
 		AgencyDto agencyDto = userMapper.toAgencyDto(agency3);
@@ -179,6 +188,12 @@ public class AdminServiceImpl implements AdminService {
 		// TODO Auto-generated method stub
 		Agency agency = agencyRepository.findByEmail(email)
 				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + email));
+		RealEStateUser byEmail = userRepo.findByEmail(email);
+		
+		byEmail.getRoles().clear(); // This will break the relation
+	    userRepo.save(byEmail);
+	    
+		userRepo.delete(byEmail);
 		agencyRepository.delete(agency);
 		return "Agency got deleted..!!!";
 	}
@@ -267,6 +282,19 @@ public class AdminServiceImpl implements AdminService {
 		VentureDto landPropertyDto = userMapper.toVentureDto(property);
 		return landPropertyDto;
 	}
+	
+	@Override
+	public String deleteVenture(long id) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		Venture property = ventureRepository.findById(id)
+				.orElseThrow(() -> new PropertyNotFoundException("Property not found with Id :" + id));
+		List<Plots> list = plotsRepository.findByVentureVentureId(property.getVentureId());
+		for (Plots plots : list) {
+			plotsRepository.delete(plots);
+		}
+		ventureRepository.delete(property);
+		return "venture Deleted successfully...!!";
+	}
 
 	@Override
 	public List<VentureDto> getAllVentures() {
@@ -333,5 +361,29 @@ public class AdminServiceImpl implements AdminService {
 				.orElseThrow(() -> new PropertyNotFoundException("Plot not found with Id :" + plotId));
 		plotsRepository.delete(plots2);
 		return "Plot deleted..!!";
+	}
+
+	@Override
+	public Long countOfVentures() {
+		// TODO Auto-generated method stub
+		return ventureRepository.count();
+	}
+
+	@Override
+	public Long countOfAgencies() {
+		// TODO Auto-generated method stub
+		return agencyRepository.count();
+	}
+
+	@Override
+	public Long countOfAgents() {
+		// TODO Auto-generated method stub
+		return agentRepository.count();
+	}
+
+	@Override
+	public Long countOfCustomers() {
+		// TODO Auto-generated method stub
+		return customerRepository.count();
 	}
 }
