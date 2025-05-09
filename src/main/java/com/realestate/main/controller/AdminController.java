@@ -147,6 +147,13 @@ public class AdminController {
 	}
 	
 	@PreAuthorize("hasRole('Admin')")
+	@DeleteMapping("/deleteVenture")
+	public ResponseEntity<String> deleteVenture(@RequestParam long id) throws PropertyNotFoundException{
+		String deleteVenture = adminService.deleteVenture(id);
+		return new ResponseEntity<String>(deleteVenture, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/getAllVentures")
 	public ResponseEntity<List<VentureDto>> getAllVentures(){
 		List<VentureDto> allLandProperties = adminService.getAllVentures();
@@ -186,5 +193,33 @@ public class AdminController {
 	public ResponseEntity<String> deletePlot(@RequestParam long plotId) throws PropertyNotFoundException{
 		String deletePlot = adminService.deletePlot(plotId);
 		return new ResponseEntity<String>(deletePlot, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@GetMapping("/countOfVentures")
+	public ResponseEntity<Long> countOfVentures(){
+		Long countOfVentures = adminService.countOfVentures();
+		return new ResponseEntity<Long>(countOfVentures, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@GetMapping("/countOfAgencies")
+	public ResponseEntity<Long> countOfAgencies(){
+		Long countOfAgencies = adminService.countOfAgencies();
+		return new ResponseEntity<Long>(countOfAgencies, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('Admin','Agency')")
+	@GetMapping("/countOfAgents")
+	public ResponseEntity<Long> countOfAgents(){
+		Long countOfAgents = adminService.countOfAgents();
+		return new ResponseEntity<Long>(countOfAgents, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('Admin','Agency')")
+	@GetMapping("/countOfCustomers")
+	public ResponseEntity<Long> countOfCustomers(){
+		Long countOfCustomers = adminService.countOfCustomers();
+		return new ResponseEntity<Long>(countOfCustomers, HttpStatus.OK);
 	}
 }
