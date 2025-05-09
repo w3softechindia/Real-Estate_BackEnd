@@ -50,7 +50,7 @@ public interface AdminService {
 	VentureDto getVenture(long id) throws PropertyNotFoundException;
 	
 	String deleteVenture(long id) throws PropertyNotFoundException;
-	
+
 	List<VentureDto> getAllVentures();
 	
 	PlotsDto addPlot(long ventureId, Plots plots) throws PropertyNotFoundException;

@@ -11,5 +11,4 @@ import com.realestate.main.entity.Plots;
 public interface PlotsRepository extends JpaRepository<Plots, Long>{
 
 	List<Plots> findByVentureVentureId(long ventureId);
-
 }
