@@ -46,8 +46,9 @@ public class AgencyController {
 	
 	@PreAuthorize("hasRole('Agency')")
 	@DeleteMapping("/deleteAgent")
-	public ResponseEntity<String> deleteAgent(String email) throws UserNotFoundException {
-		String deleteAgent = agencyService.deleteAgent(email);
-		return new ResponseEntity<String>(deleteAgent, HttpStatus.OK);
+	public ResponseEntity<String> deleteAgent(@RequestParam String email) throws UserNotFoundException {
+	    String message = agencyService.deleteAgent(email);
+	    return new ResponseEntity<>(message, HttpStatus.OK);
 	}
+
 }
