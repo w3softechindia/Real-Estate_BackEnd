@@ -25,7 +25,7 @@ public class AgencyController {
 	
 	@PreAuthorize("hasRole('Agency')")
 	@PostMapping("/addAgent")
-	public ResponseEntity<AgentDto> addAgent(@RequestParam String email,@RequestBody Agent agent) throws UserNotFoundException {
+	public ResponseEntity<AgentDto> addAgent(@RequestParam String email,@RequestBody Agent agent) throws Exception {
 		AgentDto agent2 = agencyService.addAgent(email,agent);
 		return new ResponseEntity<AgentDto>(agent2, HttpStatus.OK);
 	}

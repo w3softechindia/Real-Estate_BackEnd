@@ -50,7 +50,7 @@ public class AdminController {
 	
 	@PreAuthorize("hasRole('Admin')")
 	@PostMapping("/addAgency")
-	public ResponseEntity<AgencyDto> addAgency(@RequestBody Agency agency){
+	public ResponseEntity<AgencyDto> addAgency(@RequestBody Agency agency) throws Exception{
 		AgencyDto agency2 = adminService.addAgency(agency);
 		return new ResponseEntity<AgencyDto>(agency2, HttpStatus.OK);
 	}

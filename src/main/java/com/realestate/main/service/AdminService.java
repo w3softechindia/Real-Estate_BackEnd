@@ -25,7 +25,7 @@ public interface AdminService {
 	
 	AdminDto getAdmin(String email) throws UserNotFoundException;
 	
-	AgencyDto addAgency(Agency agency);
+	AgencyDto addAgency(Agency agency) throws Exception;
 	
 	AgencyDto updateAgency(String email, Agency agency) throws UserNotFoundException;
 	

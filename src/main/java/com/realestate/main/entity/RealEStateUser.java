@@ -41,7 +41,7 @@ public class RealEStateUser implements UserDetails{
 	private String password;
 	
 	@Column(unique = true)
-	private String phoneNumber;
+	private long phoneNumber;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name="User_Roles", joinColumns = {@JoinColumn(name="User_Id")},inverseJoinColumns = {@JoinColumn(name="Role_Name")})

@@ -16,6 +16,7 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.VentureDto;
+import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
@@ -72,6 +73,9 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private EmailUtil emailUtil;
 
 	@Override
 	public void addRole() {
@@ -110,15 +114,18 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public AgencyDto addAgency(Agency agency) {
+	public AgencyDto addAgency(Agency agency) throws Exception {
 		// TODO Auto-generated method stub
+		String password=agency.getPassword();
 		Role role = roleRepository.findById("Agency").get();
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		agency.setRoles(roles);
 		agency.setPassword(bCryptPasswordEncoder.encode(agency.getPassword()));
 		agency.setRegistrationDate(LocalDate.now());
+		agency.setStatus("Active");
 		Agency agency2 = agencyRepository.save(agency);
+		emailUtil.sendAgencyRegistration(agency2.getEmail(),password);
 		log.info("Agency created successfully..!!");
 
 		AgencyDto agencyDto = userMapper.toAgencyDto(agency2);
