@@ -6,7 +6,7 @@ import com.realestate.main.exceptions.UserNotFoundException;
 
 public interface AgencyService {
 	
-	AgentDto addAgent(String agencyEmail,Agent agent) throws UserNotFoundException;
+	AgentDto addAgent(String agencyEmail,Agent agent) throws UserNotFoundException, Exception;
 	
 	AgentDto updateAgent(String email, Agent agent) throws UserNotFoundException;
 	

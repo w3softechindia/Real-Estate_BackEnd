@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.realestate.main.dto.AgentDto;
-
+import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Role;
@@ -37,10 +37,14 @@ public class AgencyServiceImpl implements AgencyService {
 	
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private EmailUtil emailUtil;
 
 	@Override
-	public AgentDto addAgent(String agencyEmail,Agent agent) throws UserNotFoundException {
+	public AgentDto addAgent(String agencyEmail,Agent agent) throws Exception {
 		// TODO Auto-generated method stub
+		String password=agent.getPassword();
 		Agency agency2 = agencyRepository.findByEmail(agencyEmail)
 				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + agencyEmail));
 		Set<Role> roles = new HashSet<Role>();
@@ -54,6 +58,7 @@ public class AgencyServiceImpl implements AgencyService {
 		agent.setAgency(agency2);
 		agent.setRegistrationDate(LocalDate.now());
 		Agent agent2 = agentRepository.save(agent);
+		emailUtil.sendAgentRegistration(agent2.getEmail(), password, agency2.getAgencyName());
 		
 		AgentDto agentDto = userMapper.toAgentDto(agent2);
 		return agentDto;
