@@ -21,6 +21,8 @@ import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.RoleRepository;
 import com.realestate.main.service.AgencyService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class AgencyServiceImpl implements AgencyService {
 
@@ -91,12 +93,20 @@ public class AgencyServiceImpl implements AgencyService {
 	}
 
 	@Override
+	@Transactional
 	public String deleteAgent(String email) throws UserNotFoundException {
-		// TODO Auto-generated method stub
-		Agent agent2 = agentRepository.findByEmail(email)
-				.orElseThrow(() -> new UserNotFoundException("Agent not found with email :" + email));
-		agentRepository.delete(agent2);
-		return "Agent Deleted Successfully..!!!";
+	    Agent agent = agentRepository.findByEmail(email)
+	            .orElseThrow(() -> new UserNotFoundException("Agent not found with email: " + email));
+	    
+	    // Clear the roles to avoid foreign key constraint violation
+	    agent.getRoles().clear();
+	    agentRepository.save(agent);  // Persist the removal of roles
+
+	    // Now safely delete the agent
+	    agentRepository.delete(agent);
+
+	    return "Agent Deleted Successfully..!!!";
 	}
+
 
 }
