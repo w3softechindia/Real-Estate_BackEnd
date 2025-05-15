@@ -153,7 +153,7 @@ public class AdminController {
 		return new ResponseEntity<String>(deleteVenture, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasRole('Admin')")
+	@PreAuthorize("hasAnyRole('Admin','Agency')")
 	@GetMapping("/getAllVentures")
 	public ResponseEntity<List<VentureDto>> getAllVentures(){
 		List<VentureDto> allLandProperties = adminService.getAllVentures();
