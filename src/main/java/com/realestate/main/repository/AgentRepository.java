@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.realestate.main.entity.Agent;
 
 @Repository
-public interface AgentRepository extends JpaRepository<Agent, Integer>{
+public interface AgentRepository extends JpaRepository<Agent, Long>{
 
 	Optional<Agent> findByEmail(String email);
 
