@@ -257,10 +257,12 @@ public class AdminServiceImpl implements AdminService {
 	public VentureDto addVenture(Venture venture) {
 		// TODO Auto-generated method stub
 		Venture save = ventureRepository.save(venture);
-		for (Plots plot : venture.getPlots()) {
-//			plot.setStatus(PropertyStatus.AVAILABLE);
-			plot.setVenture(save);
-			plotsRepository.save(plot);
+		if(venture.getPlots()!=null) {
+			for (Plots plot : venture.getPlots()) {
+//				plot.setStatus(PropertyStatus.AVAILABLE);
+				plot.setVenture(save);
+				plotsRepository.save(plot);
+			}
 		}
 		VentureDto landPropertyDto = userMapper.toVentureDto(save);
 		return landPropertyDto;
