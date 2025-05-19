@@ -2,19 +2,22 @@ package com.realestate.main.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
 import com.realestate.main.dto.AdminDto;
 import com.realestate.main.dto.AgencyDto;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
+import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.VentureDto;
+import com.realestate.main.dto.VisitDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
+import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Plots;
 import com.realestate.main.entity.Venture;
+import com.realestate.main.entity.Visit;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -32,4 +35,8 @@ public interface UserMapper {
 	VentureDto toVentureDto(Venture venture);
 	
 	PlotsDto toPLotsDto(Plots plots);
+	
+	LeadDto toLeadDto(Lead lead);
+	
+	VisitDto toVisitDto(Visit visit);
 }
