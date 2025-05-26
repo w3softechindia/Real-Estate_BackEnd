@@ -25,17 +25,19 @@ public class AgencyController {
 	
 	@PreAuthorize("hasRole('Agency')")
 	@PostMapping("/addAgent")
-	public ResponseEntity<AgentDto> addAgent(@RequestParam String email,@RequestBody Agent agent) throws UserNotFoundException {
+	public ResponseEntity<AgentDto> addAgent(@RequestParam String email,@RequestBody Agent agent) throws Exception {
 		AgentDto agent2 = agencyService.addAgent(email,agent);
 		return new ResponseEntity<AgentDto>(agent2, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('Agency')")
 	@PutMapping("/updateAgent")
-	public ResponseEntity<AgentDto>  updateAgent(@RequestParam String email,@RequestBody Agent agent) throws UserNotFoundException {
-		AgentDto updateAgent = agencyService.updateAgent(email, agent);
-		return new ResponseEntity<AgentDto>(updateAgent, HttpStatus.OK);
+	public ResponseEntity<AgentDto> updateAgent(@RequestParam String email, @RequestBody Agent agent) throws UserNotFoundException {
+	    AgentDto updatedAgent = agencyService.updateAgent(email, agent);
+	    return new ResponseEntity<>(updatedAgent, HttpStatus.OK);
 	}
+
+	
 	
 	@PreAuthorize("hasAnyRole('Agency','Agent')")
 	@GetMapping("/getAgent")
@@ -46,8 +48,9 @@ public class AgencyController {
 	
 	@PreAuthorize("hasRole('Agency')")
 	@DeleteMapping("/deleteAgent")
-	public ResponseEntity<String> deleteAgent(String email) throws UserNotFoundException {
-		String deleteAgent = agencyService.deleteAgent(email);
-		return new ResponseEntity<String>(deleteAgent, HttpStatus.OK);
+	public ResponseEntity<String> deleteAgent(@RequestParam String email) throws UserNotFoundException {
+	    String message = agencyService.deleteAgent(email);
+	    return new ResponseEntity<>(message, HttpStatus.OK);
 	}
+
 }

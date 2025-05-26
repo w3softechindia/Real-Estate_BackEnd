@@ -25,7 +25,7 @@ public interface AdminService {
 	
 	AdminDto getAdmin(String email) throws UserNotFoundException;
 	
-	AgencyDto addAgency(Agency agency);
+	AgencyDto addAgency(Agency agency) throws Exception;
 	
 	AgencyDto updateAgency(String email, Agency agency) throws UserNotFoundException;
 	
@@ -49,6 +49,8 @@ public interface AdminService {
 	
 	VentureDto getVenture(long id) throws PropertyNotFoundException;
 	
+	String deleteVenture(long id) throws PropertyNotFoundException;
+
 	List<VentureDto> getAllVentures();
 	
 	PlotsDto addPlot(long ventureId, Plots plots) throws PropertyNotFoundException;
@@ -60,4 +62,12 @@ public interface AdminService {
 	PlotsDto getPlot(long plotId) throws PropertyNotFoundException;
 	
 	String deletePlot(long plotId) throws PropertyNotFoundException;
+	
+	Long countOfVentures();
+	
+	Long countOfAgencies();
+	
+	Long countOfAgents();
+	
+	Long countOfCustomers();
 }

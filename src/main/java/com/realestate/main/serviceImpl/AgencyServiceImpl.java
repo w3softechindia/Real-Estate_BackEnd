@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.realestate.main.dto.AgentDto;
-
+import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Role;
@@ -20,6 +20,8 @@ import com.realestate.main.repository.AgencyRepository;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.RoleRepository;
 import com.realestate.main.service.AgencyService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AgencyServiceImpl implements AgencyService {
@@ -37,10 +39,14 @@ public class AgencyServiceImpl implements AgencyService {
 	
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private EmailUtil emailUtil;
 
 	@Override
-	public AgentDto addAgent(String agencyEmail,Agent agent) throws UserNotFoundException {
+	public AgentDto addAgent(String agencyEmail,Agent agent) throws Exception {
 		// TODO Auto-generated method stub
+		String password=agent.getPassword();
 		Agency agency2 = agencyRepository.findByEmail(agencyEmail)
 				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + agencyEmail));
 		Set<Role> roles = new HashSet<Role>();
@@ -54,6 +60,7 @@ public class AgencyServiceImpl implements AgencyService {
 		agent.setAgency(agency2);
 		agent.setRegistrationDate(LocalDate.now());
 		Agent agent2 = agentRepository.save(agent);
+		emailUtil.sendAgentRegistration(agent2.getEmail(), password, agency2.getAgencyName());
 		
 		AgentDto agentDto = userMapper.toAgentDto(agent2);
 		return agentDto;
@@ -61,20 +68,23 @@ public class AgencyServiceImpl implements AgencyService {
 
 	@Override
 	public AgentDto updateAgent(String email, Agent agent) throws UserNotFoundException {
-		// TODO Auto-generated method stub
-		Agent agent2 = agentRepository.findByEmail(email)
-				.orElseThrow(() -> new UserNotFoundException("Agent not found with email :" + email));
-		agent2.setAddress(agent.getAddress());
-		agent2.setCity(agent.getCity());
-		agent2.setEmail(agent.getEmail());
-		agent2.setPhoneNumber(agent.getPhoneNumber());
-		agent2.setPincode(agent.getPincode());
-		agent2.setState(agent.getState());
-		Agent agent3 = agentRepository.save(agent2);
-		
-		AgentDto agentDto = userMapper.toAgentDto(agent3);
-		return agentDto;
+	    Agent existingAgent = agentRepository.findByEmail(email)
+	            .orElseThrow(() -> new UserNotFoundException("Agent not found with email: " + email));
+
+	    // Only updating the required fields
+	    existingAgent.setAgentName(agent.getAgentName());
+	    existingAgent.setAddress(agent.getAddress());
+	    existingAgent.setPincode(agent.getPincode());
+	    existingAgent.setCity(agent.getCity());
+	    existingAgent.setState(agent.getState());
+
+	    Agent updatedAgent = agentRepository.save(existingAgent);
+
+	    return userMapper.toAgentDto(updatedAgent);
 	}
+
+	
+	
 
 	@Override
 	public AgentDto getAgent(String email) throws UserNotFoundException {
@@ -86,12 +96,20 @@ public class AgencyServiceImpl implements AgencyService {
 	}
 
 	@Override
+	@Transactional
 	public String deleteAgent(String email) throws UserNotFoundException {
-		// TODO Auto-generated method stub
-		Agent agent2 = agentRepository.findByEmail(email)
-				.orElseThrow(() -> new UserNotFoundException("Agent not found with email :" + email));
-		agentRepository.delete(agent2);
-		return "Agent Deleted Successfully..!!!";
+	    Agent agent = agentRepository.findByEmail(email)
+	            .orElseThrow(() -> new UserNotFoundException("Agent not found with email: " + email));
+	    
+	    // Clear the roles to avoid foreign key constraint violation
+	    agent.getRoles().clear();
+	    agentRepository.save(agent);  // Persist the removal of roles
+
+	    // Now safely delete the agent
+	    agentRepository.delete(agent);
+
+	    return "Agent Deleted Successfully..!!!";
 	}
+
 
 }

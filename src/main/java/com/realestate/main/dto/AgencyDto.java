@@ -19,7 +19,7 @@ public class AgencyDto {
 	private long id;
 	private String email;
 	private String password;
-	private String phoneNumber;
+	private long phoneNumber;
 	private Set<Role> roles;
 	private String agencyName;
 	private String agencyAddress;

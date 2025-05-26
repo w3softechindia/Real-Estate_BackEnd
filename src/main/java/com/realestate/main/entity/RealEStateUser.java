@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 public class RealEStateUser implements UserDetails{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	@Column(unique = true)
@@ -39,9 +39,9 @@ public class RealEStateUser implements UserDetails{
 	private String password;
 	
 	@Column(unique = true)
-	private String phoneNumber;
+	private long phoneNumber;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name="User_Roles", joinColumns = {@JoinColumn(name="User_Id")},inverseJoinColumns = {@JoinColumn(name="Role_Name")})
 	private Set<Role> roles;
 	

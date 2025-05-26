@@ -32,7 +32,7 @@ public interface AgentService {
 	
 	List<VisitDto> getAllVisits();
 	
-    VisitDto updateVisitStatus(int visitId,String status) throws VisitNotFoundException;
+   VisitDto updateVisitStatus(int visitId,String status) throws VisitNotFoundException;
 	
 	VisitDto makePayment(int visitId,double amount,String transactionMode) throws VisitNotFoundException;
 	
