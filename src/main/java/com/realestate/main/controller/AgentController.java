@@ -98,4 +98,6 @@ public class AgentController {
 		String deleteLead = agentService.deleteLead(email);
 		return new ResponseEntity<String>(deleteLead,HttpStatus.OK);
 	}
+	
+
 }

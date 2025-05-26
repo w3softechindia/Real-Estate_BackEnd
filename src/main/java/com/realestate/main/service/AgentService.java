@@ -30,4 +30,6 @@ public interface AgentService {
 	VisitDto addVisit(Visit visit);
 	
 	List<VisitDto> getAllVisits();
+	
+	
 }

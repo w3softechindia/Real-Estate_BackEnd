@@ -19,4 +19,6 @@ public class VisitDto {
 	private String notes;
 	private String customerFeedback;
 	private String nextStep;
+
+
 }

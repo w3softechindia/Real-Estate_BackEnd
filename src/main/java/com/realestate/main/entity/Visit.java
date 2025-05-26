@@ -26,4 +26,5 @@ public class Visit {
 	private String notes;
 	private String customerFeedback;
 	private String nextStep;
+	
 }
