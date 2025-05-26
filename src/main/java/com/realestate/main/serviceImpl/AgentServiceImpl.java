@@ -21,6 +21,7 @@ import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.RoleNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
+import com.realestate.main.exceptions.VisitNotFoundException;
 import com.realestate.main.mapper.UserMapper;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
@@ -163,7 +164,48 @@ public class AgentServiceImpl implements AgentService {
 		leadRepository.delete(deleteLead);
 		return "Lead Deleted SucessFully.....";
 	}
+	
+	@Override
+	public VisitDto updateVisitStatus(int visitId, String status) throws VisitNotFoundException {
+		Visit updateVisit = visitRepository.findById(visitId).orElseThrow(
+				()-> new VisitNotFoundException("Visit with Id :"+visitId+" is not found..."));
+		
+		updateVisit.setStatus(status);
+		
+		 Visit save = visitRepository.save(updateVisit);
+		 
+		 VisitDto visitDto = userMapper.toVisitDto(save);
+		 
+		 return visitDto;
+		 
+	}
 
+	@Override
+	public VisitDto makePayment(int visitId, double amount, String transactionMode) throws VisitNotFoundException {
+		Visit visitList = visitRepository.findById(visitId).orElseThrow(
+				()-> new VisitNotFoundException("Visit with Id :"+visitId+" is not found..."));
+		
+		visitList.setAmount(amount);
+		visitList.setTransactionMode(transactionMode);
+		
+		// generate 4-digit token (1000–9999)
+		int token = ThreadLocalRandom.current().nextInt(1000,10_000);
+		visitList.setTokenId(String.valueOf(token));
+		
+		Visit saveTransaction = visitRepository.save(visitList);
+		VisitDto visitDto = userMapper.toVisitDto(saveTransaction);
+		return visitDto;
+	}
+
+	@Override
+	public VisitDto acceptToken(String tokenId,String agencyStatus) throws VisitNotFoundException {
+		Visit tokenList = visitRepository.findByTokenId(tokenId).orElseThrow(
+				()->new VisitNotFoundException("tokenId With :"+tokenId+" is not Found......"));
+		
+		tokenList.setAgencyStatus(agencyStatus);
+		Visit save = visitRepository.save(tokenList);
+		return userMapper.toVisitDto(save);
+	}
 
 
 }
