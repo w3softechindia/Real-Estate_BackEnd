@@ -10,6 +10,7 @@ import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.RoleNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
+import com.realestate.main.exceptions.VisitNotFoundException;
 
 public interface AgentService {
 	
@@ -30,4 +31,11 @@ public interface AgentService {
 	VisitDto addVisit(Visit visit);
 	
 	List<VisitDto> getAllVisits();
+	
+    VisitDto updateVisitStatus(int visitId,String status) throws VisitNotFoundException;
+	
+	VisitDto makePayment(int visitId,double amount,String transactionMode) throws VisitNotFoundException;
+	
+	VisitDto acceptToken(String tokenId,String agencyStatus) throws VisitNotFoundException;
+
 }

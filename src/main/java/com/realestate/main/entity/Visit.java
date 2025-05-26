@@ -26,4 +26,9 @@ public class Visit {
 	private String notes;
 	private String customerFeedback;
 	private String nextStep;
+	private String status;
+	private double amount;
+	private String transactionMode;
+	private String agencyStatus;
+	private String tokenId;
 }

@@ -26,6 +26,7 @@ import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.RoleNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
+import com.realestate.main.exceptions.VisitNotFoundException;
 import com.realestate.main.repository.VisitRepository;
 import com.realestate.main.service.AgentService;
 
@@ -97,5 +98,26 @@ public class AgentController {
 	public ResponseEntity<String> deleteLead(@RequestParam String email) throws UserNotFoundException{
 		String deleteLead = agentService.deleteLead(email);
 		return new ResponseEntity<String>(deleteLead,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	@PutMapping("/updateVisitStatus")
+	public ResponseEntity<VisitDto> updateVisitStatus(@RequestParam int visitId,@RequestParam String status) throws VisitNotFoundException{
+		VisitDto updateVisitStatus = agentService.updateVisitStatus(visitId, status);
+		return new ResponseEntity<VisitDto>(updateVisitStatus,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	@PutMapping("/payment")
+public ResponseEntity<VisitDto> makePayment(@RequestParam int visitId,@RequestParam double amount,@RequestParam String transactionMode) throws VisitNotFoundException{
+	VisitDto payment = agentService.makePayment(visitId, amount, transactionMode);
+return new ResponseEntity<VisitDto>(payment,HttpStatus.OK);
+}
+	
+	@PreAuthorize("hasRole('Agency')")
+	@PutMapping("/acceptToken")
+	public ResponseEntity<VisitDto> acceptToken(@RequestParam String tokenId,@RequestParam String agencyStatus) throws VisitNotFoundException{
+		VisitDto acceptToken = agentService.acceptToken(tokenId,agencyStatus);
+		return new ResponseEntity<VisitDto>(acceptToken,HttpStatus.OK);
 	}
 }
