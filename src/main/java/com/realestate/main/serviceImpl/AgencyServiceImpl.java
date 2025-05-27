@@ -68,20 +68,23 @@ public class AgencyServiceImpl implements AgencyService {
 
 	@Override
 	public AgentDto updateAgent(String email, Agent agent) throws UserNotFoundException {
-		// TODO Auto-generated method stub
-		Agent agent2 = agentRepository.findByEmail(email)
-				.orElseThrow(() -> new UserNotFoundException("Agent not found with email :" + email));
-		agent2.setAddress(agent.getAddress());
-		agent2.setCity(agent.getCity());
-		agent2.setEmail(agent.getEmail());
-		agent2.setPhoneNumber(agent.getPhoneNumber());
-		agent2.setPincode(agent.getPincode());
-		agent2.setState(agent.getState());
-		Agent agent3 = agentRepository.save(agent2);
-		
-		AgentDto agentDto = userMapper.toAgentDto(agent3);
-		return agentDto;
+	    Agent existingAgent = agentRepository.findByEmail(email)
+	            .orElseThrow(() -> new UserNotFoundException("Agent not found with email: " + email));
+
+	    // Only updating the required fields
+	    existingAgent.setAgentName(agent.getAgentName());
+	    existingAgent.setAddress(agent.getAddress());
+	    existingAgent.setPincode(agent.getPincode());
+	    existingAgent.setCity(agent.getCity());
+	    existingAgent.setState(agent.getState());
+
+	    Agent updatedAgent = agentRepository.save(existingAgent);
+
+	    return userMapper.toAgentDto(updatedAgent);
 	}
+
+	
+	
 
 	@Override
 	public AgentDto getAgent(String email) throws UserNotFoundException {

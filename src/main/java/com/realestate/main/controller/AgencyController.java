@@ -32,10 +32,12 @@ public class AgencyController {
 	
 	@PreAuthorize("hasRole('Agency')")
 	@PutMapping("/updateAgent")
-	public ResponseEntity<AgentDto>  updateAgent(@RequestParam String email,@RequestBody Agent agent) throws UserNotFoundException {
-		AgentDto updateAgent = agencyService.updateAgent(email, agent);
-		return new ResponseEntity<AgentDto>(updateAgent, HttpStatus.OK);
+	public ResponseEntity<AgentDto> updateAgent(@RequestParam String email, @RequestBody Agent agent) throws UserNotFoundException {
+	    AgentDto updatedAgent = agencyService.updateAgent(email, agent);
+	    return new ResponseEntity<>(updatedAgent, HttpStatus.OK);
 	}
+
+	
 	
 	@PreAuthorize("hasAnyRole('Agency','Agent')")
 	@GetMapping("/getAgent")
