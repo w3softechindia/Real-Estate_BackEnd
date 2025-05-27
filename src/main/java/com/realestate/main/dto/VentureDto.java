@@ -1,5 +1,6 @@
 package com.realestate.main.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.realestate.main.entity.Plots;
@@ -11,8 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VentureDto {
+public class VentureDto implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1979115496428358937L;
+
 	private long ventureId;
 
 	private String ventureName; 

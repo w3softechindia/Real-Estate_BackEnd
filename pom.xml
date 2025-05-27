@@ -74,18 +74,28 @@
 			<artifactId>jjwt-api</artifactId>
 			<version>0.12.5</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
 			<version>0.12.5</version>
 			<scope>runtime</scope>
 		</dependency>
-			<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-mail</artifactId>
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
 </dependency>
-
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
@@ -93,15 +103,15 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-    <groupId>org.springdoc</groupId>
-    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-    <version>2.8.6</version>
-	</dependency>
+    		<groupId>org.springdoc</groupId>
+    		<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    		<version>2.8.6</version>
+		</dependency>
 		<dependency>
-    <groupId>org.mapstruct</groupId>
-    <artifactId>mapstruct</artifactId>
-    <version>1.6.3</version>
-	</dependency>
+   			<groupId>org.mapstruct</groupId>
+    		<artifactId>mapstruct</artifactId>
+    		<version>1.6.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -110,7 +120,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-				 <source>21</source>
+				<source>21</source>
                 <target>21</target>
 					<annotationProcessorPaths>
 						<path>
@@ -136,6 +146,11 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.heroku.sdk</groupId>
+				<artifactId>heroku-maven-plugin</artifactId>
+				<version>3.0.8</version>
 			</plugin>
 		</plugins>
 	</build>

@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Authority implements GrantedAuthority{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5204382211511392832L;
 	private String authority;
 
 	@Override

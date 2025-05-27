@@ -22,6 +22,7 @@ import com.realestate.main.repository.AgencyRepository;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.RealEstateUserRepo;
+
 @Primary
 @Service
 public class JwtServiceImpl implements UserDetailsService {
