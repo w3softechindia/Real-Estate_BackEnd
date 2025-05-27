@@ -1,7 +1,6 @@
 package com.realestate.main.redisConfiguration;
 
 import java.net.URI;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -36,7 +35,6 @@ public class RedisConfig {
 
 	    return new LettuceConnectionFactory(config);
 	}
-
 
 	@Bean
 	public RedisTemplate<String, Object> redisTemplate() {
