@@ -1,5 +1,6 @@
 package com.realestate.main.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -15,8 +16,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AgentDto {
+public class AgentDto implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3503946714286691004L;
 	private long id;
 	private String email;
 	private String password;

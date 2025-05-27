@@ -30,6 +30,11 @@ import lombok.NoArgsConstructor;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class RealEStateUser implements UserDetails{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5871664728853186802L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;

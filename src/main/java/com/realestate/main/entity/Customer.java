@@ -17,6 +17,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Customer extends RealEStateUser{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3618457476902143482L;
 	private String address;
 	private String customerName;
 	private int pincode;
