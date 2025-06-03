@@ -21,11 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -73,7 +68,7 @@ public class SecurityConfiguration {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+		configuration.setAllowedOrigins(List.of("*"));
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true); // This is required if using cookies/auth headers
@@ -82,12 +77,5 @@ public class SecurityConfiguration {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-
-//	@Bean
-//	OpenAPI customOpenAPI() {
-//		return new OpenAPI().addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
-//				.components(new Components().addSecuritySchemes("bearerAuth", new SecurityScheme().name("Authorization")
-//						.type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
-//	}
 
 }
