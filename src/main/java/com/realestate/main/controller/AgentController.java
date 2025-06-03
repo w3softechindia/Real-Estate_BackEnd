@@ -31,7 +31,6 @@ import com.realestate.main.repository.VisitRepository;
 import com.realestate.main.service.AgentService;
 
 @RestController
-@CrossOrigin(origins = "", allowedHeaders = "")
 public class AgentController {
 	
 	@Autowired
