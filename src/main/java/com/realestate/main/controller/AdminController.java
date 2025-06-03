@@ -31,7 +31,6 @@ import com.realestate.main.service.AdminService;
 import jakarta.annotation.PostConstruct;
 
 @RestController
-@CrossOrigin(origins = "", allowedHeaders = "")
 public class AdminController {
 	
 	@Autowired
