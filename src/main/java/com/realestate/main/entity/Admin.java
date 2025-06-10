@@ -13,5 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Admin extends RealEStateUser{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -40010880755397877L;
 	private String adminName;
 }

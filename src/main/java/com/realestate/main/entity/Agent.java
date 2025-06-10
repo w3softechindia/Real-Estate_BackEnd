@@ -23,6 +23,10 @@ import lombok.Setter;
 @Entity
 public class Agent extends RealEStateUser{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8673791853055528320L;
 	private String agentName;
 	private String address;
 	private int pincode;

@@ -1,5 +1,6 @@
 package com.realestate.main.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import com.realestate.main.entity.PropertyStatus;
 import com.realestate.main.entity.Venture;
@@ -11,8 +12,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlotsDto {
+public class PlotsDto implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5633359406771884981L;
 	private long plotId;
 	private String plotNumber;
 	private Double plotSize; // In square yards or square feet

@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -32,8 +30,13 @@ import lombok.NoArgsConstructor;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class RealEStateUser implements UserDetails{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5871664728853186802L;
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	@Column(unique = true)
@@ -43,9 +46,8 @@ public class RealEStateUser implements UserDetails{
 	@Column(unique = true)
 	private long phoneNumber;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name="User_Roles", joinColumns = {@JoinColumn(name="User_Id")},inverseJoinColumns = {@JoinColumn(name="Role_Name")})
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private Set<Role> roles;
 	
 	@Override

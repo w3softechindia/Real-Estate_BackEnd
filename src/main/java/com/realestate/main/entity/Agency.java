@@ -21,6 +21,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Agency extends RealEStateUser{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2359113032282549333L;
 	private String agencyName;
 	private String agencyAddress;
 	private int agencyPinCode;

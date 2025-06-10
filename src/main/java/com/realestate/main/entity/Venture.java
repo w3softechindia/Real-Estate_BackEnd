@@ -1,5 +1,6 @@
 package com.realestate.main.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -19,7 +20,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Venture {
+public class Venture implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7907606992877379844L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

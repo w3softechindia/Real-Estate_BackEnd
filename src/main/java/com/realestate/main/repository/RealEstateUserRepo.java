@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.realestate.main.entity.RealEStateUser;
 @Repository
-public interface RealEstateUserRepo extends JpaRepository<RealEStateUser, Integer>{
+public interface RealEstateUserRepo extends JpaRepository<RealEStateUser, Long>{
 
 	RealEStateUser findByEmail(String email);
 
