@@ -261,7 +261,7 @@ public class AdminServiceImpl implements AdminService {
 	public List<AgencyDto> getAllAgencies() {
 		// TODO Auto-generated method stub
 		List<Agency> all = agencyRepository.findAll();
-
+		log.info("Fetching from DB..!!");
 		List<AgencyDto> collect = all.stream().map(userMapper::toAgencyDto).collect(Collectors.toList());
 		return collect;
 	}
@@ -326,6 +326,7 @@ public class AdminServiceImpl implements AdminService {
 	public List<VentureDto> getAllVentures() {
 		// TODO Auto-generated method stub
 		List<Venture> list = ventureRepository.findAll();
+		log.info("Fetching from DB..!!");
 		List<VentureDto> collect = list.stream().map(userMapper::toVentureDto).collect(Collectors.toList());
 		return collect;
 	}
