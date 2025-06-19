@@ -137,7 +137,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@CachePut(value = "admin", key = "#email")
+//	@CachePut(value = "admin", key = "#email")
 	public AdminDto updateAdmin(String email, Admin admin) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		Admin admin2 = adminRepository.findByEmail(email)
@@ -154,7 +154,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Cacheable(value = "admin", key ="#email",unless = "#result==null")
+//	@Cacheable(value = "admin", key ="#email",unless = "#result==null")
 	public AdminDto getAdmin(String email) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		Admin admin2 = adminRepository.findByEmail(email)
@@ -165,7 +165,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@CachePut(value = "agency", key = "#email")
+//	@CachePut(value = "agency", key = "#email")
 	public AgencyDto updateAgency(String email, Agency agency) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		Agency agency2 = agencyRepository.findByEmail(email)
@@ -187,7 +187,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Cacheable(value = "agency", key = "#email")
+//	@Cacheable(value = "agency", key = "#email")
 	public AgencyDto getAgency(String email) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		Agency orElseThrow = agencyRepository.findByEmail(email)
@@ -198,7 +198,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@CacheEvict(value = "agency", key = "#email")
+//	@CacheEvict(value = "agency", key = "#email")
 	public String deleteAgency(String email) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		Agency agency = agencyRepository.findByEmail(email)
@@ -214,7 +214,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Cacheable(value = "customer")
+//	@Cacheable(value = "customer")
 	public List<CustomerDto> getAllCustomers() {
 		// TODO Auto-generated method stub
 		List<Customer> all = customerRepository.findAll();
@@ -224,7 +224,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Cacheable(value = "cutomer", key = "agencyName")
+//	@Cacheable(value = "cutomer", key = "agencyName")
 	public List<CustomerDto> getCustomersByAgency(String agencyName) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		Agency agency2 = agencyRepository.findByAgencyName(agencyName)
@@ -236,7 +236,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Cacheable(value = "agent")
+//	@Cacheable(value = "agent")
 	public List<AgentDto> getAllAgents() {
 		// TODO Auto-generated method stub
 		List<Agent> all = agentRepository.findAll();
@@ -245,7 +245,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Cacheable(value = "agent", key = "#agencyName")
+//	@Cacheable(value = "agent", key = "#agencyName")
 	public List<AgentDto> getAgentsByAgency(String agencyName) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		Agency agency2 = agencyRepository.findByAgencyName(agencyName)
@@ -282,7 +282,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@CachePut(value = "venture",key = "#id")
+//	@CachePut(value = "venture",key = "#id")
 	public VentureDto updateVenture(long id, Venture landProperty) throws PropertyNotFoundException {
 		// TODO Auto-generated method stub
 		Venture property = ventureRepository.findById(id)
@@ -298,7 +298,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Cacheable(value = "venture", key = "#id")
+//	@Cacheable(value = "venture", key = "#id")
 	public VentureDto getVenture(long id) throws PropertyNotFoundException {
 		// TODO Auto-generated method stub
 		Venture property = ventureRepository.findById(id)
@@ -308,7 +308,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
-	@CacheEvict(value = "venture", key = "#id")
+//	@CacheEvict(value = "venture", key = "#id")
 	public String deleteVenture(long id) throws PropertyNotFoundException {
 		// TODO Auto-generated method stub
 		Venture property = ventureRepository.findById(id)
@@ -322,7 +322,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Cacheable(value = "venture")
+//	@Cacheable(value = "venture")
 	public List<VentureDto> getAllVentures() {
 		// TODO Auto-generated method stub
 		List<Venture> list = ventureRepository.findAll();
