@@ -1,5 +1,4 @@
 package com.realestate.main.redisConfiguration;
-
 import java.net.URI;
 import java.time.Duration;
 
@@ -17,11 +16,11 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.cache.RedisCacheManager;
 
+
 @Configuration
 @EnableCaching
 public class RedisConfig {
-
-	  @Value("${REDISCLOUD_URL}")
+ @Value("${REDISCLOUD_URL}")
 	    private String redisUrl;
 
 	    @Bean
@@ -74,5 +73,5 @@ public class RedisConfig {
 	                .cacheDefaults(cacheConfiguration())
 	                .build();
 	    }
-	
+
 }
