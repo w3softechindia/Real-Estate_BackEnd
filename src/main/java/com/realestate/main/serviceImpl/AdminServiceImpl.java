@@ -1,5 +1,6 @@
 package com.realestate.main.serviceImpl;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.realestate.main.dto.AdminDto;
 import com.realestate.main.dto.AgencyDto;
@@ -25,9 +27,11 @@ import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.PropertyStatus;
 import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Venture;
+import com.realestate.main.excelOperations.PlotExcelService;
 import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.mapper.UserMapper;
@@ -42,10 +46,12 @@ import com.realestate.main.repository.RoleRepository;
 import com.realestate.main.repository.VentureRepository;
 import com.realestate.main.service.AdminService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
@@ -79,6 +85,9 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	private EmailUtil emailUtil;
+	
+	@Autowired
+	private PlotExcelService plotExcelService;
 
 	@Override
 	public void addRole() {
@@ -257,7 +266,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Cacheable(value = "agency")
+//	@Cacheable(value = "agency")
 	public List<AgencyDto> getAllAgencies() {
 		// TODO Auto-generated method stub
 		List<Agency> all = agencyRepository.findAll();
@@ -267,16 +276,20 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public VentureDto addVenture(Venture venture) {
+	public VentureDto addVenture(Venture venture, MultipartFile file) throws IOException {
 		// TODO Auto-generated method stub
 		Venture save = ventureRepository.save(venture);
-		if(venture.getPlots()!=null) {
-			for (Plots plot : venture.getPlots()) {
-//				plot.setStatus(PropertyStatus.AVAILABLE);
-				plot.setVenture(save);
-				plotsRepository.save(plot);
-			}
-		}
+		List<Plots> plots = plotExcelService.parseAndValidate(file, save);
+		
+		long availablePlots = plots.stream().filter(plot-> plot.getStatus()==PropertyStatus.AVAILABLE).count();
+		long soldPlots = plots.stream().filter(plot-> plot.getStatus()==PropertyStatus.SOLD).count();
+		long bookedPlots = plots.stream().filter(plot-> plot.getStatus()==PropertyStatus.BOOKED).count();
+		
+		save.setAvailablePlots(availablePlots);
+		save.setSoldPlots(soldPlots);
+		save.setBookedPlots(bookedPlots);
+		save.setTotalPlots(plots.size());
+		
 		VentureDto landPropertyDto = userMapper.toVentureDto(save);
 		return landPropertyDto;
 	}
@@ -343,15 +356,13 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<PlotsDto> addAllPlots(long ventureId, List<Plots> plots) throws PropertyNotFoundException {
+	public List<PlotsDto> addAllPlots(long ventureId, MultipartFile file) throws PropertyNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		Venture venture = ventureRepository.findById(ventureId)
 				.orElseThrow(() -> new PropertyNotFoundException("Property not found with Id :" + ventureId));
-		List<Plots> collect = plots.stream().peek((plot) -> plot.setVenture(venture))
-				.collect(Collectors.toList());
+		List<Plots> list = plotExcelService.parseAndValidate(file, venture);
+		plotsRepository.saveAll(list);
 		
-		List<Plots> list = plotsRepository.saveAll(collect);
-
 		return list.stream().map(userMapper::toPLotsDto).collect(Collectors.toList());
 	}
 

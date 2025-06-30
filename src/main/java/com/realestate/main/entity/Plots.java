@@ -26,7 +26,7 @@ public class Plots {
 	private long plotId;
 	private String plotNumber;
 	private Double plotSize; // In square yards or square feet
-	private BigDecimal price;
+	private Double price;
 
 	@Enumerated(EnumType.STRING)
 	private PropertyStatus status;

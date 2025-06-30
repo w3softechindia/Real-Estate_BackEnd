@@ -1,11 +1,11 @@
 package com.realestate.main.controller;
 
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.realestate.main.dto.AdminDto;
 import com.realestate.main.dto.AgencyDto;
 import com.realestate.main.dto.AgentDto;
@@ -126,8 +128,12 @@ public class AdminController {
 	
 	@PreAuthorize("hasRole('Admin')")
 	@PostMapping("/addVenture")
-	public ResponseEntity<VentureDto> addVenture(@RequestBody Venture venture){
-		VentureDto landProperty2 = adminService.addVenture(venture);
+	public ResponseEntity<VentureDto> addVenture(@RequestParam String jsonVenture, @RequestParam MultipartFile file) throws IOException{
+		//Convert String to Object
+		ObjectMapper objectMapper=new ObjectMapper();
+		Venture venture = objectMapper.readValue(jsonVenture, Venture.class);
+		
+		VentureDto landProperty2 = adminService.addVenture(venture,file);
 		return new ResponseEntity<VentureDto>(landProperty2, HttpStatus.OK);
 	}
 	
@@ -168,14 +174,14 @@ public class AdminController {
 	
 	@PreAuthorize("hasRole('Admin')")
 	@PostMapping("/addAllPlots")
-	public ResponseEntity<List<PlotsDto>> addAllPlots(@RequestParam long ventureId,@RequestBody List<Plots> plots) throws PropertyNotFoundException {
-		List<PlotsDto> allPlots = adminService.addAllPlots(ventureId, plots);
+	public ResponseEntity<List<PlotsDto>> addAllPlots(@RequestParam long ventureId,@RequestParam MultipartFile file) throws PropertyNotFoundException, IOException {
+		List<PlotsDto> allPlots = adminService.addAllPlots(ventureId, file);
 		return new ResponseEntity<List<PlotsDto>>(allPlots, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('Admin')")
 	@PutMapping("/updatePlot")
-	public ResponseEntity<PlotsDto> updatePlot(@RequestParam long plotId, Plots plots) throws PropertyNotFoundException{
+	public ResponseEntity<PlotsDto> updatePlot(@RequestParam long plotId,@RequestBody Plots plots) throws PropertyNotFoundException{
 		PlotsDto updatePlot = adminService.updatePlot(plotId, plots);
 		return new ResponseEntity<PlotsDto>(updatePlot, HttpStatus.OK);
 	}

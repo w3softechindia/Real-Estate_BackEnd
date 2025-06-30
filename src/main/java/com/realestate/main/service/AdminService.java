@@ -1,6 +1,9 @@
 package com.realestate.main.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.realestate.main.dto.AdminDto;
 import com.realestate.main.dto.AgencyDto;
@@ -43,7 +46,7 @@ public interface AdminService {
 	
 	List<AgentDto> getAgentsByAgency(String agencyName) throws UserNotFoundException;
 	
-	VentureDto addVenture(Venture venture);
+	VentureDto addVenture(Venture venture,MultipartFile file) throws IOException;
 	
 	VentureDto updateVenture(long id, Venture venture) throws PropertyNotFoundException;
 	
@@ -55,7 +58,7 @@ public interface AdminService {
 	
 	PlotsDto addPlot(long ventureId, Plots plots) throws PropertyNotFoundException;
 	
-	List<PlotsDto> addAllPlots(long ventureId, List<Plots> plots) throws PropertyNotFoundException;
+	List<PlotsDto> addAllPlots(long ventureId, MultipartFile file) throws PropertyNotFoundException, IOException;
 	
 	PlotsDto updatePlot(long plotId, Plots plots) throws PropertyNotFoundException;
 	

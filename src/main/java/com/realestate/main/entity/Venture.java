@@ -33,10 +33,10 @@ public class Venture implements Serializable{
 
 	private String ventureName; 
 	private String ventureSize;
-	private int totalPlots;
-	private int availablePlots;
-	private int bookedPlots;
-	private int soldPlots;
+	private long totalPlots;
+	private long availablePlots;
+	private long bookedPlots;
+	private long soldPlots;
 	private String address;
 	private String city;
 	private String state;
