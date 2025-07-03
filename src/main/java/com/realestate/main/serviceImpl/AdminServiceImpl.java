@@ -88,6 +88,9 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private EmailUtil emailUtil;
+	
+	@Autowired
+	private PlotExcelService plotExcelService;
 
 	@Autowired
 	private PlotExcelService plotExcelService;
@@ -299,8 +302,8 @@ public class AdminServiceImpl implements AdminService {
 		save.setSoldPlots(soldPlots);
 		save.setBookedPlots(bookedPlots);
 		save.setTotalPlots(plots.size());
-		save.setVentureStatus(PropertyStatus.ACTIVE);
 
+		save.setVentureStatus(PropertyStatus.ACTIVE);
 		VentureDto landPropertyDto = userMapper.toVentureDto(save);
 		return landPropertyDto;
 	}
@@ -374,7 +377,6 @@ public class AdminServiceImpl implements AdminService {
 				.orElseThrow(() -> new PropertyNotFoundException("Property not found with Id :" + ventureId));
 		List<Plots> list = plotExcelService.parseAndValidate(file, venture);
 		plotsRepository.saveAll(list);
-
 		return list.stream().map(userMapper::toPLotsDto).collect(Collectors.toList());
 	}
 
