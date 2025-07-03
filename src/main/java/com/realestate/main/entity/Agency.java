@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +35,11 @@ public class Agency extends RealEStateUser{
 	private LocalDate registrationDate;
 	private String status;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "agency")
-	@JsonManagedReference
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "agency")
+	@JsonManagedReference("agency-agent")
 	private List<Agent> agents;
+	
+	@OneToMany(mappedBy = "agencies", cascade = CascadeType.ALL)
+	@JsonManagedReference("agency-venture")
+	private List<AgencyVenture> agencyVentures;
 }

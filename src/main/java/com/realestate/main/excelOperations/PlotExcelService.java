@@ -46,7 +46,7 @@ public class PlotExcelService {
 				}
 
 				Plots plots = new Plots();
-				plots.setPlotNumber(row.getCell(0).getStringCellValue());
+				plots.setPlotNumber((long) row.getCell(0).getNumericCellValue());
 				plots.setPlotSize(row.getCell(1).getNumericCellValue());
 				plots.setPrice(row.getCell(2).getNumericCellValue());
 				String status = row.getCell(3).getStringCellValue().trim().toUpperCase();
@@ -60,6 +60,7 @@ public class PlotExcelService {
 				plots.setFacing(row.getCell(5).getStringCellValue());
 				plots.setCornerPlot(row.getCell(6).getBooleanCellValue());
 				plots.setVenture(venture);
+				plots.setAssignStatus(PropertyStatus.NOTASSIGNED);
 				
 				list.add(plots);
 			}

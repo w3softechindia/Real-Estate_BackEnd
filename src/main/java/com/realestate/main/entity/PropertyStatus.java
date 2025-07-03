@@ -4,5 +4,9 @@ public enum PropertyStatus {
 	
 	AVAILABLE,
     SOLD,
-    BOOKED
+    BOOKED,
+    ASSIGNED,
+    NOTASSIGNED,
+    ACTIVE,
+    INACTIVE
 }

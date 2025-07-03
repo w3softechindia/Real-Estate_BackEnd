@@ -8,22 +8,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.realestate.main.dto.AdminDto;
 import com.realestate.main.dto.AgencyDto;
+import com.realestate.main.dto.AgencyVentureDto;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
+import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
+import com.realestate.main.entity.AgencyVenture;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Plots;
@@ -32,12 +32,15 @@ import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.excelOperations.PlotExcelService;
+import com.realestate.main.exceptions.AgencyNotFoundException;
+import com.realestate.main.exceptions.DuplicateEntryException;
 import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.mapper.UserMapper;
 
 import com.realestate.main.repository.AdminRepository;
 import com.realestate.main.repository.AgencyRepository;
+import com.realestate.main.repository.AgencyVentureRepository;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.PlotsRepository;
@@ -53,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
-	
+
 	@Autowired
 	private RealEstateUserRepo userRepo;
 
@@ -82,12 +85,18 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private UserMapper userMapper;
-	
+
 	@Autowired
 	private EmailUtil emailUtil;
 	
 	@Autowired
 	private PlotExcelService plotExcelService;
+
+	@Autowired
+	private PlotExcelService plotExcelService;
+
+	@Autowired
+	private AgencyVentureRepository agencyVentureRepository;
 
 	@Override
 	public void addRole() {
@@ -110,8 +119,10 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public AdminDto addAdmin(Admin admin) {
+	public AdminDto addAdmin(Admin admin) throws DuplicateEntryException {
 		// TODO Auto-generated method stub
+		if(userRepo.existsByEmail(admin.getEmail())) throw new DuplicateEntryException("Email Already Exists with :"+admin.getEmail());
+		if(userRepo.existsByPhoneNumber(admin.getPhoneNumber())) throw new DuplicateEntryException("Phone Number Already exists :"+admin.getPhoneNumber());
 		Role role = roleRepository.findById("Admin").get();
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
@@ -128,16 +139,18 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public AgencyDto addAgency(Agency agency) throws Exception {
 		// TODO Auto-generated method stub
-		String password=agency.getPassword();
+		if(userRepo.existsByEmail(agency.getEmail())) throw new DuplicateEntryException("Email Already Exists with :"+agency.getEmail());
+		if(userRepo.existsByPhoneNumber(agency.getPhoneNumber())) throw new DuplicateEntryException("Phone Number Already exists :"+agency.getPhoneNumber());
+		String password = agency.getPassword();
 		Role role = roleRepository.findById("Agency").get();
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		agency.setRoles(roles);
 		agency.setPassword(bCryptPasswordEncoder.encode(agency.getPassword()));
 		agency.setRegistrationDate(LocalDate.now());
-		agency.setStatus("Active");
+		agency.setStatus("ACTIVE");
 		Agency agency2 = agencyRepository.save(agency);
-		emailUtil.sendAgencyRegistration(agency2.getEmail(),password);
+		emailUtil.sendAgencyRegistration(agency2.getEmail(), password);
 		log.info("Agency created successfully..!!");
 
 		AgencyDto agencyDto = userMapper.toAgencyDto(agency2);
@@ -213,10 +226,10 @@ public class AdminServiceImpl implements AdminService {
 		Agency agency = agencyRepository.findByEmail(email)
 				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + email));
 		RealEStateUser byEmail = userRepo.findByEmail(email);
-		
+
 		byEmail.getRoles().clear(); // This will break the relation
-	    userRepo.save(byEmail);
-	    
+		userRepo.save(byEmail);
+
 		userRepo.delete(byEmail);
 		agencyRepository.delete(agency);
 		return "Agency got deleted..!!!";
@@ -280,16 +293,17 @@ public class AdminServiceImpl implements AdminService {
 		// TODO Auto-generated method stub
 		Venture save = ventureRepository.save(venture);
 		List<Plots> plots = plotExcelService.parseAndValidate(file, save);
-		
-		long availablePlots = plots.stream().filter(plot-> plot.getStatus()==PropertyStatus.AVAILABLE).count();
-		long soldPlots = plots.stream().filter(plot-> plot.getStatus()==PropertyStatus.SOLD).count();
-		long bookedPlots = plots.stream().filter(plot-> plot.getStatus()==PropertyStatus.BOOKED).count();
-		
+
+		long availablePlots = plots.stream().filter(plot -> plot.getStatus() == PropertyStatus.AVAILABLE).count();
+		long soldPlots = plots.stream().filter(plot -> plot.getStatus() == PropertyStatus.SOLD).count();
+		long bookedPlots = plots.stream().filter(plot -> plot.getStatus() == PropertyStatus.BOOKED).count();
+
 		save.setAvailablePlots(availablePlots);
 		save.setSoldPlots(soldPlots);
 		save.setBookedPlots(bookedPlots);
 		save.setTotalPlots(plots.size());
-		
+
+		save.setVentureStatus(PropertyStatus.ACTIVE);
 		VentureDto landPropertyDto = userMapper.toVentureDto(save);
 		return landPropertyDto;
 	}
@@ -319,7 +333,7 @@ public class AdminServiceImpl implements AdminService {
 		VentureDto landPropertyDto = userMapper.toVentureDto(property);
 		return landPropertyDto;
 	}
-	
+
 	@Override
 //	@CacheEvict(value = "venture", key = "#id")
 	public String deleteVenture(long id) throws PropertyNotFoundException {
@@ -356,13 +370,13 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<PlotsDto> addAllPlots(long ventureId, MultipartFile file) throws PropertyNotFoundException, IOException {
+	public List<PlotsDto> addAllPlots(long ventureId, MultipartFile file)
+			throws PropertyNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		Venture venture = ventureRepository.findById(ventureId)
 				.orElseThrow(() -> new PropertyNotFoundException("Property not found with Id :" + ventureId));
 		List<Plots> list = plotExcelService.parseAndValidate(file, venture);
 		plotsRepository.saveAll(list);
-		
 		return list.stream().map(userMapper::toPLotsDto).collect(Collectors.toList());
 	}
 
@@ -424,4 +438,111 @@ public class AdminServiceImpl implements AdminService {
 		// TODO Auto-generated method stub
 		return customerRepository.count();
 	}
+
+	@Override
+	public AgencyVentureDto assignVentureWithPlots(long agencyId, long ventureId, long startPlotNumber,
+			long endPlotNumber) throws AgencyNotFoundException, PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		Agency agency = agencyRepository.findById(agencyId)
+				.orElseThrow(() -> new AgencyNotFoundException("Agency Not Found with :" + agencyId));
+		Venture venture = ventureRepository.findById(ventureId)
+				.orElseThrow(() -> new PropertyNotFoundException("Property Not Found with :" + ventureId));
+		List<Plots> plots = plotsRepository.findByVentureVentureIdAndPlotNumberBetweenOrderByPlotNumber(ventureId,
+				startPlotNumber, endPlotNumber);
+
+		if (plots.isEmpty()) {
+			throw new PropertyNotFoundException("Plots Not found within the given range..!!");
+		}
+
+		for (Plots plots2 : plots) {
+			plots2.setAssignStatus(PropertyStatus.ASSIGNED);
+			plots2.setAgencyName(agency.getAgencyName());
+		}
+
+		AgencyVenture agencyVenture = new AgencyVenture();
+		agencyVenture.setAgencies(agency);
+		agencyVenture.setVenture(venture);
+		agencyVenture.setPlotsAssigned(plots);
+		agencyVenture.setNumberOfPlots(plots.size());
+
+		plotsRepository.saveAll(plots);
+		AgencyVenture save = agencyVentureRepository.save(agencyVenture);
+		AgencyVentureDto agencyVentureDto = userMapper.toAgencyVentureDto(save);
+		return agencyVentureDto;
+	}
+
+	@Override
+	public PlotsDetailsDto countPlotsByVentureId(long ventureId) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		List<Plots> plots = plotsRepository.findByVentureVentureId(ventureId);
+		if (plots.isEmpty()) {
+			throw new PropertyNotFoundException("Plots not found with venture Id :" + ventureId);
+		}
+
+		long total = plots.size();
+		long unassigned = 0, assigned = 0, booked = 0, sold = 0, available = 0;
+
+		for (Plots plot : plots) {
+			PropertyStatus status = plot.getAssignStatus();
+			if (status == PropertyStatus.NOTASSIGNED)
+				unassigned++;
+			else if (status == PropertyStatus.ASSIGNED)
+				assigned++;
+			else if (status == PropertyStatus.BOOKED)
+				booked++;
+			else if (status == PropertyStatus.SOLD)
+				sold++;
+			else if (status == PropertyStatus.AVAILABLE)
+				available++;
+		}
+
+		PlotsDetailsDto dto = new PlotsDetailsDto();
+		dto.setCountOfPlots(total);
+		dto.setCountOfAvailablePlots(available);
+		dto.setCountOfBookedPlots(booked);
+		dto.setCountOfAssignedPlots(assigned);
+		dto.setCountOfSoldPlots(sold);
+		dto.setCountOfUnAssignedPlots(unassigned);
+
+		return dto;
+	}
+
+	@Override
+	public List<Plots> getPlotsByVentureId(long ventureId) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		List<Plots> plots = plotsRepository.findByVentureVentureId(ventureId);
+		if (plots.isEmpty()) {
+			throw new PropertyNotFoundException("Plots not found with venture Id :" + ventureId);
+		}
+		return plots;
+	}
+
+	@Override
+	public List<Plots> getUnAssignedPlots(long ventureId) throws PropertyNotFoundException {
+		// TODO Auto-generated method stub
+		List<Plots> list = plotsRepository.findByVentureVentureId(ventureId);
+		if (list.isEmpty())
+			throw new PropertyNotFoundException("Plots not found with venture id :" + ventureId);
+		List<Plots> list2 = list.stream().filter((plot) -> plot.getAssignStatus().equals(PropertyStatus.NOTASSIGNED))
+				.collect(Collectors.toList());
+		if (list2.isEmpty())
+			throw new PropertyNotFoundException("No Plots found with NotAssigned Status..!!");
+		return list2;
+	}
+
+//	@Override
+//	public long countUnassignedPlotsByVentureId(long ventureId) throws PropertyNotFoundException {
+//		// TODO Auto-generated method stub
+//		List<Plots> byVentureVentureId = plotsRepository.findByVentureVentureId(ventureId);
+//		long count = byVentureVentureId.stream().filter((plot)-> plot.getAssignStatus().equals(PropertyStatus.NOTASSIGNED)).count();
+//		return count;
+//	}
+//
+//	@Override
+//	public long countAssignedPlotsByVentureId(long ventureId) throws PropertyNotFoundException {
+//		// TODO Auto-generated method stub
+//		List<Plots> byVentureVentureId = plotsRepository.findByVentureVentureId(ventureId);
+//		long count = byVentureVentureId.stream().filter((plot)-> plot.getAssignStatus().equals(PropertyStatus.ASSIGNED)).count();
+//		return count;
+//	}
 }

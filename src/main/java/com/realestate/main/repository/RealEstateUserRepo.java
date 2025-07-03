@@ -8,5 +8,6 @@ import com.realestate.main.entity.RealEStateUser;
 public interface RealEstateUserRepo extends JpaRepository<RealEStateUser, Long>{
 
 	RealEStateUser findByEmail(String email);
-
+	boolean existsByEmail(String email);
+	boolean existsByPhoneNumber(long phno);
 }
