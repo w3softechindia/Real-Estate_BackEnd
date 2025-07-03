@@ -36,7 +36,7 @@ public class Agent extends RealEStateUser{
 	private String status;
 	
 	@ManyToOne
-	@JsonBackReference
+	@JsonBackReference("agency-agent")
 	private Agency agency;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "agent")

@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 import com.realestate.main.entity.Plots;
 
 @Repository
-public interface PlotsRepository extends JpaRepository<Plots, Long>{
+public interface PlotsRepository extends JpaRepository<Plots, Long> {
 
 	List<Plots> findByVentureVentureId(long ventureId);
+
+	List<Plots> findByVentureVentureIdAndPlotNumberBetweenOrderByPlotNumber(long ventureId, long stPlotNum,
+			long edPlotNum);
 }

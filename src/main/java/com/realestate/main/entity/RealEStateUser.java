@@ -28,8 +28,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
-public class RealEStateUser implements UserDetails{
-	
+public class RealEStateUser implements UserDetails {
+
 	/**
 	 * 
 	 */
@@ -38,27 +38,28 @@ public class RealEStateUser implements UserDetails{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	@Column(unique = true)
+
+	@Column(nullable = false, unique = true)
 	private String email;
 	private String password;
-	
-	@Column(unique = true)
+
+	@Column(nullable = false, unique = true)
 	private long phoneNumber;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name="User_Roles", joinColumns = {@JoinColumn(name="User_Id")},inverseJoinColumns = {@JoinColumn(name="Role_Name")})
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "User_Roles", joinColumns = { @JoinColumn(name = "User_Id") }, inverseJoinColumns = {
+			@JoinColumn(name = "Role_Name") })
 	private Set<Role> roles;
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Set<Authority> authorities=new HashSet<Authority>();
-		this.roles.forEach(userRole->{
-			authorities.add(new Authority("ROLE_"+userRole.getRoleName()));
+		Set<Authority> authorities = new HashSet<Authority>();
+		this.roles.forEach(userRole -> {
+			authorities.add(new Authority("ROLE_" + userRole.getRoleName()));
 		});
 		return authorities;
 	}
-	
+
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub

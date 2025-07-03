@@ -1,7 +1,5 @@
 package com.realestate.main.entity;
 
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
@@ -24,9 +22,9 @@ public class Plots {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long plotId;
-	private String plotNumber;
+	private long plotNumber;
 	private Double plotSize; // In square yards or square feet
-	private BigDecimal price;
+	private Double price;
 
 	@Enumerated(EnumType.STRING)
 	private PropertyStatus status;
@@ -40,4 +38,9 @@ public class Plots {
 	@ManyToOne
 	@JsonBackReference
 	private Venture venture;
+	
+	@Enumerated(EnumType.STRING)
+	private PropertyStatus assignStatus;
+	
+	private String agencyName;
 }

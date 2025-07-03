@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,18 +35,24 @@ public class Venture implements Serializable{
 
 	private String ventureName; 
 	private String ventureSize;
-	private int totalPlots;
-	private int availablePlots;
-	private int bookedPlots;
-	private int soldPlots;
+	private long totalPlots;
+	private long availablePlots;
+	private long bookedPlots;
+	private long soldPlots;
 	private String address;
 	private String city;
 	private String state;
 	private long phno;
 	private long pincode;
 	
+	@Enumerated(EnumType.STRING)
+	private PropertyStatus ventureStatus;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "venture")
 	@JsonManagedReference
 	private List<Plots> plots;
-
+	
+	@OneToMany(mappedBy = "venture", cascade = CascadeType.ALL)
+	@JsonManagedReference("venture-agency")
+	private List<AgencyVenture> agencyVentures;
 }

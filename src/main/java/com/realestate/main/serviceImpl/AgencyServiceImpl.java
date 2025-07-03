@@ -14,10 +14,12 @@ import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Role;
+import com.realestate.main.exceptions.DuplicateEntryException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.mapper.UserMapper;
 import com.realestate.main.repository.AgencyRepository;
 import com.realestate.main.repository.AgentRepository;
+import com.realestate.main.repository.RealEstateUserRepo;
 import com.realestate.main.repository.RoleRepository;
 import com.realestate.main.service.AgencyService;
 
@@ -42,10 +44,15 @@ public class AgencyServiceImpl implements AgencyService {
 	
 	@Autowired
 	private EmailUtil emailUtil;
+	
+	@Autowired
+	private RealEstateUserRepo userRepo;
 
 	@Override
 	public AgentDto addAgent(String agencyEmail,Agent agent) throws Exception {
 		// TODO Auto-generated method stub
+		if(userRepo.existsByEmail(agent.getEmail())) throw new DuplicateEntryException("Email Already Exists with :"+agent.getEmail());
+		if(userRepo.existsByPhoneNumber(agent.getPhoneNumber())) throw new DuplicateEntryException("Phone Number Already exists :"+agent.getPhoneNumber());
 		String password=agent.getPassword();
 		Agency agency2 = agencyRepository.findByEmail(agencyEmail)
 				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + agencyEmail));
@@ -59,6 +66,7 @@ public class AgencyServiceImpl implements AgencyService {
 		agent.setPassword(bCryptPasswordEncoder.encode(agent.getPassword()));
 		agent.setAgency(agency2);
 		agent.setRegistrationDate(LocalDate.now());
+		agent.setStatus("ACTIVE");
 		Agent agent2 = agentRepository.save(agent);
 		emailUtil.sendAgentRegistration(agent2.getEmail(), password, agency2.getAgencyName());
 		
