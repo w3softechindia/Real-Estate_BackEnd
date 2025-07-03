@@ -93,9 +93,6 @@ public class AdminServiceImpl implements AdminService {
 	private PlotExcelService plotExcelService;
 
 	@Autowired
-	private PlotExcelService plotExcelService;
-
-	@Autowired
 	private AgencyVentureRepository agencyVentureRepository;
 
 	@Override
