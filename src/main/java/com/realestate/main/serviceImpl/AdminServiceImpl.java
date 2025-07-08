@@ -199,6 +199,7 @@ public class AdminServiceImpl implements AdminService {
 		agency2.setInstagramUrl(agency.getInstagramUrl());
 		agency2.setTwitterUrl(agency.getTwitterUrl());
 		agency2.setState(agency.getState());
+		agency2.setStatus(agency.getStatus());
 		Agency agency3 = agencyRepository.save(agency2);
 
 		AgencyDto agencyDto = userMapper.toAgencyDto(agency3);
@@ -301,7 +302,8 @@ public class AdminServiceImpl implements AdminService {
 		save.setTotalPlots(plots.size());
 
 		save.setVentureStatus(PropertyStatus.ACTIVE);
-		VentureDto landPropertyDto = userMapper.toVentureDto(save);
+		Venture venture2 = ventureRepository.save(save);
+		VentureDto landPropertyDto = userMapper.toVentureDto(venture2);
 		return landPropertyDto;
 	}
 
@@ -314,6 +316,7 @@ public class AdminServiceImpl implements AdminService {
 		property.setVentureName(landProperty.getVentureName());
 		property.setAddress(landProperty.getAddress());
 		property.setPhno(landProperty.getPhno());
+		property.setVentureStatus(landProperty.getVentureStatus());
 
 		Venture landProperty2 = ventureRepository.save(property);
 		VentureDto landPropertyDto = userMapper.toVentureDto(landProperty2);
@@ -527,6 +530,19 @@ public class AdminServiceImpl implements AdminService {
 		return list2;
 	}
 
+	@Override
+	public List<Agency> getActiveAgencies() {
+		// TODO Auto-generated method stub
+		List<Agency> allByStatus = agencyRepository.findAllByStatus("ACTIVE");
+		return allByStatus;
+	}
+
+	@Override
+	public List<Venture> getActiveVentures() {
+		// TODO Auto-generated method stub
+		List<Venture> allByVentureStatus = ventureRepository.findAllByVentureStatus("ACTIVE");
+		return allByVentureStatus;
+	}
 //	@Override
 //	public long countUnassignedPlotsByVentureId(long ventureId) throws PropertyNotFoundException {
 //		// TODO Auto-generated method stub

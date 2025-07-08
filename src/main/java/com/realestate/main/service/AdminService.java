@@ -86,6 +86,10 @@ public interface AdminService {
 	List<Plots> getPlotsByVentureId(long ventureId) throws PropertyNotFoundException;
 	
 	List<Plots> getUnAssignedPlots(long ventureId) throws PropertyNotFoundException;
+	
+	List<Agency> getActiveAgencies();
+	
+	List<Venture> getActiveVentures();
 
 //	long countUnassignedPlotsByVentureId(long ventureId) throws PropertyNotFoundException;
 //
