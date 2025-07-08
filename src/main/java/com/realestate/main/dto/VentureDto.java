@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.realestate.main.entity.Plots;
-import com.realestate.main.entity.PropertyStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,5 +33,5 @@ public class VentureDto implements Serializable{
 	private long phno;
 	private long pincode;
 	private List<Plots> plots;
-	private PropertyStatus ventureStatus;
+	private String ventureStatus;
 }

@@ -272,6 +272,20 @@ public class AdminController {
 		List<Plots> unAssignedPlots = adminService.getUnAssignedPlots(ventureId);
 		return new ResponseEntity<List<Plots>>(unAssignedPlots, HttpStatus.OK);
 	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@GetMapping("/getActiveAgencies")
+	public ResponseEntity<List<Agency>> getActiveAgencies() {
+		List<Agency> activeAgencies = adminService.getActiveAgencies();
+		return new ResponseEntity<List<Agency>>(activeAgencies, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('Admin','Agency')")
+	@GetMapping("/getActiveVentures")
+	public ResponseEntity<List<Venture>> getActiveVentures(){
+		List<Venture> activeVentures = adminService.getActiveVentures();
+		return new ResponseEntity<List<Venture>>(activeVentures, HttpStatus.OK);
+	}
 
 //	@PreAuthorize("hasAnyRole('Admin','Agency','Agent')")
 //	@GetMapping("/countUnassignedPlots")
