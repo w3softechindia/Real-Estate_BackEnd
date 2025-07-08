@@ -543,7 +543,6 @@ public class AdminServiceImpl implements AdminService {
 		List<Venture> allByVentureStatus = ventureRepository.findAllByVentureStatus("ACTIVE");
 		return allByVentureStatus;
 	}
-
 //	@Override
 //	public long countUnassignedPlotsByVentureId(long ventureId) throws PropertyNotFoundException {
 //		// TODO Auto-generated method stub
