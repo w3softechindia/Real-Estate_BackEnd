@@ -75,7 +75,7 @@ public class AdminController {
 		return new ResponseEntity<AdminDto>(admin, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasRole('Admin') or hasRole('Agency')")
+@PreAuthorize("hasRole('Admin') or hasRole('Agency')")
 	@PutMapping("/updateAgency")
 	public ResponseEntity<AgencyDto> updateAgency(@RequestParam String email, @RequestBody Agency agency)
 			throws UserNotFoundException {
