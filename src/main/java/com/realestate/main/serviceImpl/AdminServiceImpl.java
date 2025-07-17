@@ -183,29 +183,67 @@ public class AdminServiceImpl implements AdminService {
 		return adminDto;
 	}
 
-	@Override
-//	@CachePut(value = "agency", key = "#email")
-	public AgencyDto updateAgency(String email, Agency agency) throws UserNotFoundException {
-		// TODO Auto-generated method stub
-		Agency agency2 = agencyRepository.findByEmail(email)
-				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + email));
-		agency2.setAgencyAddress(agency.getAgencyAddress());
-		agency2.setAgencyName(agency.getAgencyName());
-		agency2.setAgencyPinCode(agency.getAgencyPinCode());
-		agency2.setEmail(agency.getEmail());
-		agency2.setPhoneNumber(agency.getPhoneNumber());
-		agency2.setCity(agency.getCity());
-		agency2.setFbUrl(agency.getFbUrl());
-		agency2.setInstagramUrl(agency.getInstagramUrl());
-		agency2.setTwitterUrl(agency.getTwitterUrl());
-		agency2.setState(agency.getState());
-		agency2.setStatus(agency.getStatus());
-		Agency agency3 = agencyRepository.save(agency2);
+//	@Override
+//	public AgencyDto updateAgency(String email, Agency agency) throws UserNotFoundException {
+//		// TODO Auto-generated method stub
+//		Agency agency2 = agencyRepository.findByEmail(email)
+//				.orElseThrow(() -> new UserNotFoundException("Agency not found with email :" + email));
+//		agency2.setAgencyAddress(agency.getAgencyAddress());
+//		agency2.setAgencyName(agency.getAgencyName());
+//		agency2.setAgencyPinCode(agency.getAgencyPinCode());
+//		agency2.setEmail(agency.getEmail());
+//		agency2.setPhoneNumber(agency.getPhoneNumber());
+//		agency2.setCity(agency.getCity());
+//		agency2.setFbUrl(agency.getFbUrl());
+//		agency2.setInstagramUrl(agency.getInstagramUrl());
+//		agency2.setTwitterUrl(agency.getTwitterUrl());
+//		agency2.setState(agency.getState());
+//		agency2.setStatus(agency.getStatus());
+//		Agency agency3 = agencyRepository.save(agency2);
+//
+//		AgencyDto agencyDto = userMapper.toAgencyDto(agency3);
+//		return agencyDto;
+//	}
 
-		AgencyDto agencyDto = userMapper.toAgencyDto(agency3);
-		return agencyDto;
+	
+	
+	//working method
+	@Override
+	public AgencyDto updateAgency(String email, Agency agency) throws UserNotFoundException {
+	    Agency agency2 = agencyRepository.findByEmail(email)
+	            .orElseThrow(() -> new UserNotFoundException("Agency not found with email: " + email));
+
+	    // Only update non-null and valid fields
+	    if (agency.getAgencyName() != null) agency2.setAgencyName(agency.getAgencyName());
+	    if (agency.getAgencyAddress() != null) agency2.setAgencyAddress(agency.getAgencyAddress());
+	    if (agency.getAgencyPinCode() != 0) agency2.setAgencyPinCode(agency.getAgencyPinCode());
+	    if (agency.getPhoneNumber() != 0) agency2.setPhoneNumber(agency.getPhoneNumber());
+	    if (agency.getCity() != null) agency2.setCity(agency.getCity());
+	    if (agency.getState() != null) agency2.setState(agency.getState());
+	    if (agency.getFbUrl() != null) agency2.setFbUrl(agency.getFbUrl());
+	    if (agency.getInstagramUrl() != null) agency2.setInstagramUrl(agency.getInstagramUrl());
+	    if (agency.getTwitterUrl() != null) agency2.setTwitterUrl(agency.getTwitterUrl());
+	    if (agency.getStatus() != null) agency2.setStatus(agency.getStatus());
+
+	    // Do NOT update email here — it's your identifier
+	    // Do NOT update password or roles unless explicitly handled
+
+	    Agency agency3 = agencyRepository.save(agency2);
+	    return userMapper.toAgencyDto(agency3);
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 //	@Cacheable(value = "agency", key = "#email")
 	public AgencyDto getAgency(String email) throws UserNotFoundException {

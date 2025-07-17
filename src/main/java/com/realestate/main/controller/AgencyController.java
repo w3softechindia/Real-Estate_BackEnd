@@ -24,7 +24,7 @@ import com.realestate.main.service.AgencyService;
 @RestController
 public class AgencyController {
 
-	@Autowired
+@Autowired
 	private AgencyService agencyService;
 
 	@PreAuthorize("hasRole('Agency')")
@@ -84,6 +84,5 @@ public class AgencyController {
 	    List<Post> posts = agencyService.getAllPostsByAgency(email);
 	    return new ResponseEntity<>(posts, HttpStatus.OK);
 	}
-	
-	
+
 }
