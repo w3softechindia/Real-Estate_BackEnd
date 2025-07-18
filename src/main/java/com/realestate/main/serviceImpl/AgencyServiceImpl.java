@@ -10,10 +10,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.realestate.main.dto.AgentDto;
+import com.realestate.main.dto.TokenDto;
 import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Role;
+import com.realestate.main.entity.Token;
 import com.realestate.main.exceptions.DuplicateEntryException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.mapper.UserMapper;
@@ -21,6 +23,7 @@ import com.realestate.main.repository.AgencyRepository;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.RealEstateUserRepo;
 import com.realestate.main.repository.RoleRepository;
+import com.realestate.main.repository.TokenRepository;
 import com.realestate.main.service.AgencyService;
 
 import jakarta.transaction.Transactional;
@@ -47,6 +50,9 @@ public class AgencyServiceImpl implements AgencyService {
 	
 	@Autowired
 	private RealEstateUserRepo userRepo;
+	
+	@Autowired
+	private TokenRepository tokenRepository;
 
 	@Override
 	public AgentDto addAgent(String agencyEmail,Agent agent) throws Exception {
@@ -119,5 +125,16 @@ public class AgencyServiceImpl implements AgencyService {
 	    return "Agent Deleted Successfully..!!!";
 	}
 
+	@Override
+	public TokenDto acceptToken(int tokenId, String agencyStatus) throws UserNotFoundException {
+		Token token = tokenRepository.findById(tokenId).orElseThrow(
+				()->new UserNotFoundException("Token With Id :"+ tokenId+"is not found......"));
+		
+		token.setAgencyStatus(agencyStatus);
+		
+		Token save = tokenRepository.save(token);
+		return userMapper.toTokenDto(save);
+		 
+	}
 
 }

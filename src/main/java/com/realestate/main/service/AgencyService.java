@@ -1,6 +1,7 @@
 package com.realestate.main.service;
 
 import com.realestate.main.dto.AgentDto;
+import com.realestate.main.dto.TokenDto;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.exceptions.UserNotFoundException;
 
@@ -13,4 +14,6 @@ public interface AgencyService {
 	AgentDto getAgent(String email) throws UserNotFoundException;
 	
 	String deleteAgent(String email) throws UserNotFoundException;
+	
+	TokenDto acceptToken(int tokenId,String agencyStatus) throws UserNotFoundException;
 }

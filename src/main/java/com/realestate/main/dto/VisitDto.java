@@ -2,6 +2,9 @@ package com.realestate.main.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
+
+import com.realestate.main.entity.Lead;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VisitDto {
 	private int visitId;
-	private String leadName;
 	private String propertyType;
 	private LocalDate visitDate;
 	private LocalTime visitTime;
@@ -20,8 +22,6 @@ public class VisitDto {
 	private String customerFeedback;
 	private String nextStep;
 	private String status;
-	private double amount;
-	private String transactionMode;
-	private String agencyStatus;
-	private String tokenId;
+	private String reason;
+	private Lead lead;
 }

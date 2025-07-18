@@ -4,21 +4,22 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.LeadDto;
+import com.realestate.main.dto.TokenDto;
 import com.realestate.main.dto.VisitDto;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Role;
+import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
+import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.RoleNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.exceptions.VisitNotFoundException;
@@ -27,6 +28,7 @@ import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.LeadRepository;
 import com.realestate.main.repository.RoleRepository;
+import com.realestate.main.repository.TokenRepository;
 import com.realestate.main.repository.VisitRepository;
 import com.realestate.main.service.AgentService;
 
@@ -52,6 +54,9 @@ public class AgentServiceImpl implements AgentService {
 	
 	@Autowired
 	private VisitRepository visitRepository;
+	
+	@Autowired
+	private TokenRepository tokenRepository;
 
 	@Override
 	public CustomerDto addCustomer(String agentEmail, Customer customer)
@@ -105,7 +110,12 @@ public class AgentServiceImpl implements AgentService {
 	
 	
 	@Override
-	public LeadDto addLead(Lead lead) {
+	public LeadDto addLead(Lead lead,String agentemail) throws AgentNotFoundException {
+		
+		Agent agent = agentRepository.findByEmail(agentemail).orElseThrow(
+				()->new AgentNotFoundException("Agent not found with email :"+agentemail));
+		
+		lead.setAgent(agent);
 	      Lead saveLead = leadRepository.save(lead);
 	      
 	      LeadDto leadDto = userMapper.toLeadDto(saveLead);
@@ -120,19 +130,26 @@ public class AgentServiceImpl implements AgentService {
 	}
 
 	@Override
-	public VisitDto addVisit(Visit visit) {
-		Visit saveVisit = visitRepository.save(visit);
+	public VisitDto addVisit(Visit visit,int leadId) throws UserNotFoundException{
+		Lead lead = leadRepository.findById(leadId).
+				orElseThrow(()->new UserNotFoundException("Lead With ID : "+leadId+" is Not Found....."));
 		
+		visit.setLead(lead);		
+		Visit saveVisit = visitRepository.save(visit);
+	
 		VisitDto visitDto = userMapper.toVisitDto(saveVisit);
 		return visitDto;
 	}
 
-	@Override
+
+	
 	public List<VisitDto> getAllVisits() {
-		List<Visit> allVisits = visitRepository.findAll();
-		List<VisitDto> Visits = allVisits.stream().map(userMapper::toVisitDto).collect(Collectors.toList());
-		return Visits;
+	    List<Visit> visits = visitRepository.findAll();
+
+      List<VisitDto> allVisits = visits.stream().map(userMapper::toVisitDto).collect(Collectors.toList());
+      return allVisits;
 	}
+
 
 	@Override
 	public LeadDto updateLead(Lead lead, String email) throws UserNotFoundException {
@@ -166,11 +183,12 @@ public class AgentServiceImpl implements AgentService {
 	}
 	
 	@Override
-	public VisitDto updateVisitStatus(int visitId, String status) throws VisitNotFoundException {
+	public VisitDto updateVisitStatus(int visitId, String status,String reason) throws VisitNotFoundException {
 		Visit updateVisit = visitRepository.findById(visitId).orElseThrow(
 				()-> new VisitNotFoundException("Visit with Id :"+visitId+" is not found..."));
 		
 		updateVisit.setStatus(status);
+		updateVisit.setReason(reason);
 		
 		 Visit save = visitRepository.save(updateVisit);
 		 
@@ -180,32 +198,45 @@ public class AgentServiceImpl implements AgentService {
 		 
 	}
 
+
 	@Override
-	public VisitDto makePayment(int visitId, double amount, String transactionMode) throws VisitNotFoundException {
-		Visit visitList = visitRepository.findById(visitId).orElseThrow(
-				()-> new VisitNotFoundException("Visit with Id :"+visitId+" is not found..."));
+	public AgentDto updateProfile(Agent agent, String email) throws AgentNotFoundException {
+		Agent agentDetails = agentRepository.findByEmail(email).orElseThrow(
+				()-> new AgentNotFoundException("Agent Not Found with email :"+ email));
 		
-		visitList.setAmount(amount);
-		visitList.setTransactionMode(transactionMode);
+		agentDetails.setPhoneNumber(agent.getPhoneNumber());
+		agentDetails.setAddress(agent.getAddress());
+		agentDetails.setCity(agent.getCity());
+		agentDetails.setState(agent.getState());
+		agentDetails.setPincode(agent.getPincode());
 		
-		// generate 4-digit token (1000–9999)
-		int token = ThreadLocalRandom.current().nextInt(1000,10_000);
-		visitList.setTokenId(String.valueOf(token));
+		Agent updatedAgent = agentRepository.save(agentDetails);
 		
-		Visit saveTransaction = visitRepository.save(visitList);
-		VisitDto visitDto = userMapper.toVisitDto(saveTransaction);
-		return visitDto;
+		AgentDto agentDto = userMapper.toAgentDto(updatedAgent);
+		return agentDto;
 	}
 
 	@Override
-	public VisitDto acceptToken(String tokenId,String agencyStatus) throws VisitNotFoundException {
-		Visit tokenList = visitRepository.findByTokenId(tokenId).orElseThrow(
-				()->new VisitNotFoundException("tokenId With :"+tokenId+" is not Found......"));
+	public TokenDto makePayment(int leadId, Token token) throws UserNotFoundException {
+		 Lead lead = leadRepository.findById(leadId).orElseThrow(
+				()->new UserNotFoundException("Lead With Id  :"+leadId+" is not Found..."));
 		
-		tokenList.setAgencyStatus(agencyStatus);
-		Visit save = visitRepository.save(tokenList);
-		return userMapper.toVisitDto(save);
+		 token.setLead(lead);
+		Token save = tokenRepository.save(token);
+		
+		TokenDto tokenDto=userMapper.toTokenDto(save);
+		
+		return tokenDto;
 	}
+
+	@Override
+	public List<TokenDto> getAllTokens() {
+		List<Token> all = tokenRepository.findAll();
+		List<TokenDto> allTokens = all.stream().map(userMapper::toTokenDto).collect(Collectors.toList());
+		return allTokens;
+	}
+
+	
 
 
 }

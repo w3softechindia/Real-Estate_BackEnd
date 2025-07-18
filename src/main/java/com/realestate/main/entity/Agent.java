@@ -42,4 +42,8 @@ public class Agent extends RealEStateUser{
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "agent")
 	@JsonManagedReference
 	private List<Customer> customers;
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "agent")
+	@JsonManagedReference
+	private List<Lead> leads;
 }
