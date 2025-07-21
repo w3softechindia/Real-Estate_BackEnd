@@ -131,7 +131,7 @@ return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 		return new ResponseEntity<AgentDto>(updateProfile,HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasRole('Agent')")
+	@PreAuthorize("hasAnyRole('Agency','Agent')")
 	@GetMapping("/getAllTokens")
 	public ResponseEntity<List<TokenDto>> getAllTokens(){
 		List<TokenDto> allTokens = agentService.getAllTokens();
