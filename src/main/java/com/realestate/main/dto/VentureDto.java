@@ -34,5 +34,5 @@ public class VentureDto implements Serializable{
 	private long phno;
 	private long pincode;
 	private List<Plots> plots;
-	private PropertyStatus ventureStatus;
+	private String ventureStatus;
 }
