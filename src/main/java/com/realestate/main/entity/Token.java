@@ -1,7 +1,7 @@
 package com.realestate.main.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,19 +16,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Visit {
+public class Token {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int visitId;
-	private String propertyType;
-	private LocalDate visitDate;
-	private LocalTime visitTime;
-	private String notes;
-	private String customerFeedback;
-	private String nextStep;
-	private String status;
-	private String reason;
+	private int tokenid;
+	private double amount;
+	private String transactionMode;
+	private String agencyStatus;
+	private LocalDate tokenDeadLine;
 	
 	@ManyToOne
 	@JsonBackReference
