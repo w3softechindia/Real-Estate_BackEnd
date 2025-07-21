@@ -19,6 +19,7 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.RealEStateUserDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Admin;
@@ -569,6 +570,16 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
+	public RealEStateUser getUserByEmail(String email) throws UserNotFoundException {
+		RealEStateUser byEmail = userRepo.findByEmail(email);
+		if(byEmail==null) {
+			throw new UserNotFoundException("user with email :"+email+" is not found.......");
+		}
+		
+		return byEmail;
+	}
+
+
 	public List<Agency> getActiveAgencies() {
 		// TODO Auto-generated method stub
 		List<Agency> allByStatus = agencyRepository.findAllByStatus("ACTIVE");
@@ -581,6 +592,7 @@ public class AdminServiceImpl implements AdminService {
 		List<Venture> allByVentureStatus = ventureRepository.findAllByVentureStatus("ACTIVE");
 		return allByVentureStatus;
 	}
+
 //	@Override
 //	public long countUnassignedPlotsByVentureId(long ventureId) throws PropertyNotFoundException {
 //		// TODO Auto-generated method stub

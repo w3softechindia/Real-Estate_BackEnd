@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.realestate.main.dto.AgentDto;
+import com.realestate.main.dto.TokenDto;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Post;
 import com.realestate.main.exceptions.UserNotFoundException;
@@ -83,6 +84,13 @@ public class AgencyController {
 	public ResponseEntity<List<Post>> getAllPosts(@RequestParam String email) throws Exception {
 	    List<Post> posts = agencyService.getAllPostsByAgency(email);
 	    return new ResponseEntity<>(posts, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Agency')")
+	@PutMapping("/acceptToken")
+	public ResponseEntity<TokenDto> updateTokenStatus(@RequestParam int tokenId,@RequestParam String agencystatus) throws UserNotFoundException{
+		TokenDto acceptToken = agencyService.acceptToken(tokenId, agencystatus);
+		return new ResponseEntity<TokenDto>(acceptToken,HttpStatus.OK);
 	}
 
 }

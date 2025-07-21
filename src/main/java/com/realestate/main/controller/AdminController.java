@@ -27,6 +27,7 @@ import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.exceptions.AgencyNotFoundException;
 import com.realestate.main.exceptions.DuplicateEntryException;
@@ -273,6 +274,12 @@ public class AdminController {
 		return new ResponseEntity<List<Plots>>(unAssignedPlots, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasAnyRole('Admin','Agency','Agent')")
+    @GetMapping("/getUserByEmail")
+	public ResponseEntity<?> getUserByEmail(@RequestParam String email) throws UserNotFoundException{
+		RealEStateUser userByEmail = adminService.getUserByEmail(email);
+		return new ResponseEntity<>(userByEmail,HttpStatus.OK);
+
 	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/getActiveAgencies")
 	public ResponseEntity<List<Agency>> getActiveAgencies() {
@@ -285,6 +292,7 @@ public class AdminController {
 	public ResponseEntity<List<Venture>> getActiveVentures(){
 		List<Venture> activeVentures = adminService.getActiveVentures();
 		return new ResponseEntity<List<Venture>>(activeVentures, HttpStatus.OK);
+
 	}
 
 //	@PreAuthorize("hasAnyRole('Admin','Agency','Agent')")
