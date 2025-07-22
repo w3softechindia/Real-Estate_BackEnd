@@ -11,7 +11,7 @@ import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.dto.VisitDto;
-import com.realestate.main.entity.Admin;
+import com.realestate.main.entity.Admin; 
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.AgencyVenture;
 import com.realestate.main.entity.Agent;
