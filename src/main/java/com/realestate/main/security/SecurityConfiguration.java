@@ -30,18 +30,18 @@ public class SecurityConfiguration {
 	private JwtFilter jwtFilter;
 
 	@Bean
-	public static AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+	static AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
 			throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 
 	@Bean
-	public UserDetailsService userDetailsService() {
+	UserDetailsService userDetailsService() {
 		return new JwtServiceImpl();
 	}
 
 	@Bean
-	public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+	AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 		provider.setPasswordEncoder(passwordEncoder());
 		provider.setUserDetailsService(userDetailsService);
@@ -49,15 +49,15 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
+	BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(12);
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager)
+	SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager)
 			throws Exception {
 		return http.csrf(customizer -> customizer.disable()).cors(Customizer.withDefaults())
-				.authorizeHttpRequests(request -> request.requestMatchers("/login", "/addAdmin").permitAll()
+				.authorizeHttpRequests(request -> request.requestMatchers("/login", "/addAdmin","/sendEmailOTP","/resetPassword","/verifyOTP").permitAll()
 						.anyRequest().authenticated())
 				.authenticationProvider(authenticationProvider(userDetailsService()))
 				.httpBasic(Customizer.withDefaults())
@@ -66,15 +66,15 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOriginPatterns(List.of("*"));
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-    configuration.setAllowedHeaders(List.of("*"));
-    configuration.setAllowCredentials(true);
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-}
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOriginPatterns(List.of("*"));
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+		configuration.setAllowedHeaders(List.of("*"));
+		configuration.setAllowCredentials(true);
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
 
 }

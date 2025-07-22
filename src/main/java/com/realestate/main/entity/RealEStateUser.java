@@ -46,6 +46,8 @@ public class RealEStateUser implements UserDetails {
 	@Column(nullable = false, unique = true)
 	private long phoneNumber;
 
+	private int otp;
+
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "User_Roles", joinColumns = { @JoinColumn(name = "User_Id") }, inverseJoinColumns = {
 			@JoinColumn(name = "Role_Name") })
