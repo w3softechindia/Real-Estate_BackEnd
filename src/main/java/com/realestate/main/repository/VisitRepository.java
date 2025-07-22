@@ -9,5 +9,5 @@ import com.realestate.main.entity.Visit;
 @Repository
 public interface VisitRepository extends JpaRepository<Visit, Integer>{
 
-	Optional<Visit> findByTokenId(String tokenId);
+	//Optional<Visit> findByTokenId(String tokenId);
 }

@@ -12,10 +12,12 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.RealEStateUserDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.exceptions.AgencyNotFoundException;
 import com.realestate.main.exceptions.DuplicateEntryException;
@@ -86,6 +88,8 @@ public interface AdminService {
 	List<Plots> getPlotsByVentureId(long ventureId) throws PropertyNotFoundException;
 	
 	List<Plots> getUnAssignedPlots(long ventureId) throws PropertyNotFoundException;
+
+	RealEStateUser getUserByEmail(String email) throws UserNotFoundException;
 	
 	List<Agency> getActiveAgencies();
 	

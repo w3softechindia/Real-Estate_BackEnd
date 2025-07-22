@@ -2,7 +2,6 @@ package com.realestate.main.controller;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.service.annotation.PatchExchange;
-
+import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.LeadDto;
+import com.realestate.main.dto.TokenDto;
 import com.realestate.main.dto.VisitDto;
+import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
+import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
+import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.RoleNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.exceptions.VisitNotFoundException;
@@ -59,8 +62,8 @@ public class AgentController {
 	
 	@PreAuthorize("hasRole('Agent')")
 	@PostMapping("/addLead")
-	public ResponseEntity<LeadDto> addLead(@RequestBody Lead lead){
-		LeadDto lead2 =agentService.addLead(lead);
+	public ResponseEntity<LeadDto> addLead(@RequestBody Lead lead,@RequestParam String agentEmail) throws AgentNotFoundException{
+		LeadDto lead2 =agentService.addLead(lead,agentEmail);
 		return new ResponseEntity<LeadDto>(lead2,HttpStatus.OK);
 	}
 	
@@ -73,8 +76,8 @@ public class AgentController {
 	
 	@PreAuthorize("hasRole('Agent')")
 	@PostMapping("/addVisit")
-	public ResponseEntity<VisitDto> addVisit(@RequestBody Visit visit){
-     VisitDto savedVisit = agentService.addVisit(visit);
+	public ResponseEntity<VisitDto> addVisit(@RequestBody Visit visit,@RequestParam int leadId)throws UserNotFoundException{
+     VisitDto savedVisit = agentService.addVisit(visit,leadId);
      return new ResponseEntity<VisitDto>(savedVisit,HttpStatus.OK);
 	}
 	
@@ -101,22 +104,37 @@ public class AgentController {
 	
 	@PreAuthorize("hasRole('Agent')")
 	@PutMapping("/updateVisitStatus")
-	public ResponseEntity<VisitDto> updateVisitStatus(@RequestParam int visitId,@RequestParam String status) throws VisitNotFoundException{
-		VisitDto updateVisitStatus = agentService.updateVisitStatus(visitId, status);
+	public ResponseEntity<VisitDto> updateVisitStatus(@RequestParam int visitId,@RequestParam String status,@RequestParam String reason) throws VisitNotFoundException{
+		VisitDto updateVisitStatus = agentService.updateVisitStatus(visitId, status,reason);
 		return new ResponseEntity<VisitDto>(updateVisitStatus,HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('Agent')")
-	@PutMapping("/payment")
-public ResponseEntity<VisitDto> makePayment(@RequestParam int visitId,@RequestParam double amount,@RequestParam String transactionMode) throws VisitNotFoundException{
-	VisitDto payment = agentService.makePayment(visitId, amount, transactionMode);
-return new ResponseEntity<VisitDto>(payment,HttpStatus.OK);
+	@PostMapping("/payment")
+public ResponseEntity<TokenDto> makePayment(@RequestParam int leadId,@RequestBody Token token) throws UserNotFoundException{
+	 TokenDto payment = agentService.makePayment(leadId, token);
+return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 }
 	
-	@PreAuthorize("hasRole('Agency')")
-	@PutMapping("/acceptToken")
-	public ResponseEntity<VisitDto> acceptToken(@RequestParam String tokenId,@RequestParam String agencyStatus) throws VisitNotFoundException{
-		VisitDto acceptToken = agentService.acceptToken(tokenId,agencyStatus);
-		return new ResponseEntity<VisitDto>(acceptToken,HttpStatus.OK);
+//	
+//	@PreAuthorize("hasRole('Agency')")
+//	@PutMapping("/acceptToken")
+//	public ResponseEntity<VisitDto> acceptToken(@RequestParam String tokenId,@RequestParam String agencyStatus) throws VisitNotFoundException{
+//		VisitDto acceptToken = agentService.acceptToken(tokenId,agencyStatus);
+//		return new ResponseEntity<VisitDto>(acceptToken,HttpStatus.OK);
+//	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	@PutMapping("/updateAgentProfile")
+	public ResponseEntity<AgentDto> updateAgentProfile(@RequestBody Agent agent,@RequestParam String email) throws AgentNotFoundException{
+		AgentDto updateProfile = agentService.updateProfile(agent, email);
+		return new ResponseEntity<AgentDto>(updateProfile,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('Agency','Agent')")
+	@GetMapping("/getAllTokens")
+	public ResponseEntity<List<TokenDto>> getAllTokens(){
+		List<TokenDto> allTokens = agentService.getAllTokens();
+		return new ResponseEntity<List<TokenDto>>(allTokens,HttpStatus.OK);
 	}
 }

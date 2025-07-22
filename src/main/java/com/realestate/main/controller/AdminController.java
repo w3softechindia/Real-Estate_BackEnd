@@ -27,6 +27,7 @@ import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.exceptions.AgencyNotFoundException;
 import com.realestate.main.exceptions.DuplicateEntryException;
@@ -75,7 +76,7 @@ public class AdminController {
 		return new ResponseEntity<AdminDto>(admin, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasRole('Admin')")
+@PreAuthorize("hasRole('Admin') or hasRole('Agency')")
 	@PutMapping("/updateAgency")
 	public ResponseEntity<AgencyDto> updateAgency(@RequestParam String email, @RequestBody Agency agency)
 			throws UserNotFoundException {
@@ -273,6 +274,13 @@ public class AdminController {
 		return new ResponseEntity<List<Plots>>(unAssignedPlots, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasAnyRole('Admin','Agency','Agent')")
+    @GetMapping("/getUserByEmail")
+	public ResponseEntity<?> getUserByEmail(@RequestParam String email) throws UserNotFoundException{
+		RealEStateUser userByEmail = adminService.getUserByEmail(email);
+		return new ResponseEntity<>(userByEmail,HttpStatus.OK);
+		}
+  
 	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/getActiveAgencies")
 	public ResponseEntity<List<Agency>> getActiveAgencies() {
