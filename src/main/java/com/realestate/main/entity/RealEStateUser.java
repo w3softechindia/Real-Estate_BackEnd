@@ -45,7 +45,7 @@ public class RealEStateUser implements UserDetails {
 
 	@Column(nullable = false, unique = true)
 	private long phoneNumber;
-
+	
 	private int otp;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
