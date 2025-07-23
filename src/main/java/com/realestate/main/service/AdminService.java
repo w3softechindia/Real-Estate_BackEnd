@@ -91,6 +91,10 @@ public interface AdminService {
 
 	RealEStateUser getUserByEmail(String email) throws UserNotFoundException;
 	
+
+	RealEStateUser getUserByEmail(String email) throws UserNotFoundException;
+	
+
 	List<Agency> getActiveAgencies();
 	
 	List<Venture> getActiveVentures();

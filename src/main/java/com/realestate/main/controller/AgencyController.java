@@ -80,7 +80,7 @@ public class AgencyController {
 
 	
 	@PreAuthorize("hasRole('Agency')")
-	@GetMapping("/getAllPosts")
+	@GetMapping("/getAllPostsByAgency")
 	public ResponseEntity<List<Post>> getAllPosts(@RequestParam String email) throws Exception {
 	    List<Post> posts = agencyService.getAllPostsByAgency(email);
 	    return new ResponseEntity<>(posts, HttpStatus.OK);

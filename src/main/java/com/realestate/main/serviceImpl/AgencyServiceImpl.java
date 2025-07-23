@@ -151,8 +151,8 @@ public class AgencyServiceImpl implements AgencyService {
 		
 		Token save = tokenRepository.save(token);
 		return userMapper.toTokenDto(save);
-		}
-		 
+	}
+
 
 	public Post updatePost(Long postId, Post updatedPost) throws Exception {
 		Post existingPost = postRepository.findById(postId)

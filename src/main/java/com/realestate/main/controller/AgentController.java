@@ -24,6 +24,7 @@ import com.realestate.main.dto.VisitDto;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
+import com.realestate.main.entity.Post;
 import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.AgentNotFoundException;
@@ -131,10 +132,17 @@ return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 		return new ResponseEntity<AgentDto>(updateProfile,HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole('Agency','Agent')")
+	@PreAuthorize("hasAnyRole('Agent','Agency')")
 	@GetMapping("/getAllTokens")
 	public ResponseEntity<List<TokenDto>> getAllTokens(){
 		List<TokenDto> allTokens = agentService.getAllTokens();
 		return new ResponseEntity<List<TokenDto>>(allTokens,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	@GetMapping("/getAllPosts")
+	public ResponseEntity<List<Post>> getAllPosts(){
+		List<Post> allPosts = agentService.getAllPosts();
+		return new ResponseEntity<List<Post>>(allPosts,HttpStatus.OK);
 	}
 }

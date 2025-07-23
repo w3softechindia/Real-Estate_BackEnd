@@ -567,6 +567,7 @@ public class AdminServiceImpl implements AdminService {
 		return byEmail;
 	}
 
+
 	public List<Agency> getActiveAgencies() {
 		// TODO Auto-generated method stub
 		List<Agency> allByStatus = agencyRepository.findAllByStatus("ACTIVE");
@@ -579,7 +580,7 @@ public class AdminServiceImpl implements AdminService {
 		List<Venture> allByVentureStatus = ventureRepository.findAllByVentureStatus("ACTIVE");
 		return allByVentureStatus;
 	}
-  
+
 //	@Override
 //	public long countUnassignedPlotsByVentureId(long ventureId) throws PropertyNotFoundException {
 //		// TODO Auto-generated method stub
