@@ -18,4 +18,5 @@ public class TokenDto {
 	private String agencyStatus;
 	private LocalDate tokenDeadLine;
 	private Lead lead;
+	private String agentName;
 }

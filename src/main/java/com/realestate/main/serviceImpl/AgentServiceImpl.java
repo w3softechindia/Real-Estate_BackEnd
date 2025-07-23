@@ -16,6 +16,7 @@ import com.realestate.main.dto.VisitDto;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
+import com.realestate.main.entity.Post;
 import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
@@ -27,6 +28,7 @@ import com.realestate.main.mapper.UserMapper;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.LeadRepository;
+import com.realestate.main.repository.Postrepository;
 import com.realestate.main.repository.RoleRepository;
 import com.realestate.main.repository.TokenRepository;
 import com.realestate.main.repository.VisitRepository;
@@ -57,6 +59,10 @@ public class AgentServiceImpl implements AgentService {
 	
 	@Autowired
 	private TokenRepository tokenRepository;
+	
+	@Autowired
+	private Postrepository postrepository;
+
 
 	@Override
 	public CustomerDto addCustomer(String agentEmail, Customer customer)
@@ -236,7 +242,10 @@ public class AgentServiceImpl implements AgentService {
 		return allTokens;
 	}
 
-	
-
+	@Override
+	public List<Post> getAllPosts() {
+		return postrepository.findAll();
+		
+	}
 
 }

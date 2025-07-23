@@ -10,6 +10,7 @@ import com.realestate.main.dto.VisitDto;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
+import com.realestate.main.entity.Post;
 import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.AgentNotFoundException;
@@ -43,8 +44,9 @@ public interface AgentService {
    
    List<TokenDto> getAllTokens();
    
-   
-		
    AgentDto updateProfile(Agent agent,String email) throws AgentNotFoundException;
+   
+   List<Post> getAllPosts();
+
 
 }

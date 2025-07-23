@@ -90,7 +90,7 @@ public interface AdminService {
 	List<Plots> getUnAssignedPlots(long ventureId) throws PropertyNotFoundException;
 
 	RealEStateUser getUserByEmail(String email) throws UserNotFoundException;
-	
+
 	List<Agency> getActiveAgencies();
 	
 	List<Venture> getActiveVentures();
