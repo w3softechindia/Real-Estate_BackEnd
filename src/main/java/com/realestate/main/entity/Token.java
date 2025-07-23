@@ -25,6 +25,7 @@ public class Token {
 	private String transactionMode;
 	private String agencyStatus;
 	private LocalDate tokenDeadLine;
+	private String agentName;
 	
 	@ManyToOne
 	@JsonBackReference
