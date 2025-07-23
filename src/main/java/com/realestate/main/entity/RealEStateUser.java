@@ -45,6 +45,8 @@ public class RealEStateUser implements UserDetails {
 
 	@Column(nullable = false, unique = true)
 	private long phoneNumber;
+	
+	private int otp;
 
 	private int otp;
 
