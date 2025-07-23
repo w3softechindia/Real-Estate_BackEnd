@@ -12,7 +12,7 @@ import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.TokenDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.dto.VisitDto;
-import com.realestate.main.entity.Admin;
+import com.realestate.main.entity.Admin; 
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.AgencyVenture;
 import com.realestate.main.entity.Agent;

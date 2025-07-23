@@ -281,6 +281,7 @@ public class AdminController {
 		return new ResponseEntity<>(userByEmail,HttpStatus.OK);
 	}
 
+
 	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/getActiveAgencies")
 	public ResponseEntity<List<Agency>> getActiveAgencies() {

@@ -153,6 +153,7 @@ public class AgencyServiceImpl implements AgencyService {
 		return userMapper.toTokenDto(save);
 	}
 
+
 	public Post updatePost(Long postId, Post updatedPost) throws Exception {
 		Post existingPost = postRepository.findById(postId)
 				.orElseThrow(() -> new UserNotFoundException("Post not found with ID: " + postId));

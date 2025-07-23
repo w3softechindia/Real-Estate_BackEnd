@@ -63,6 +63,7 @@ public class AgentServiceImpl implements AgentService {
 	@Autowired
 	private Postrepository postrepository;
 
+
 	@Override
 	public CustomerDto addCustomer(String agentEmail, Customer customer)
 			throws UserNotFoundException, RoleNotFoundException {
@@ -246,8 +247,5 @@ public class AgentServiceImpl implements AgentService {
 		return postrepository.findAll();
 		
 	}
-
-	
-
 
 }
