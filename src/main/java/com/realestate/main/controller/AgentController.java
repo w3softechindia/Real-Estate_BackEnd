@@ -70,8 +70,8 @@ public class AgentController {
 	
 	@PreAuthorize("hasRole('Agent')")
 	@GetMapping("/getAllLeads")
-	public ResponseEntity<List<LeadDto>> getAllLeads(){
-		List<LeadDto> allLeads = agentService.getAllLeads();
+	public ResponseEntity<List<LeadDto>> getAllLeads(@RequestParam String email) throws AgentNotFoundException{
+		List<LeadDto> allLeads = agentService.getAllLeadsByAgent(email);
 		return new ResponseEntity<List<LeadDto>>(allLeads,HttpStatus.OK);
 	}
 	

@@ -279,8 +279,9 @@ public class AdminController {
 	public ResponseEntity<?> getUserByEmail(@RequestParam String email) throws UserNotFoundException{
 		RealEStateUser userByEmail = adminService.getUserByEmail(email);
 		return new ResponseEntity<>(userByEmail,HttpStatus.OK);
-		}
-  
+	}
+
+
 	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("/getActiveAgencies")
 	public ResponseEntity<List<Agency>> getActiveAgencies() {
@@ -293,6 +294,7 @@ public class AdminController {
 	public ResponseEntity<List<Venture>> getActiveVentures(){
 		List<Venture> activeVentures = adminService.getActiveVentures();
 		return new ResponseEntity<List<Venture>>(activeVentures, HttpStatus.OK);
+
 	}
 
 //	@PreAuthorize("hasAnyRole('Admin','Agency','Agent')")

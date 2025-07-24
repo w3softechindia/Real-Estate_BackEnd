@@ -30,13 +30,13 @@ public interface AgentService {
 	
 	LeadDto updateLead(Lead lead,String email) throws UserNotFoundException;
 	 
-	List<LeadDto> getAllLeads();
+	List<LeadDto> getAllLeadsByAgent(String email) throws AgentNotFoundException;
 	
 	String deleteLead(String email) throws UserNotFoundException;
 	
 	VisitDto addVisit(Visit visit,int leadId) throws UserNotFoundException;
 	
-	List<VisitDto> getAllVisits();
+	List<VisitDto> getAllVisits() ;
 	
    VisitDto updateVisitStatus(int visitId,String status,String reason) throws VisitNotFoundException;
    
