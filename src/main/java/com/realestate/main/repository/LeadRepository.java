@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface LeadRepository extends JpaRepository<Lead, Integer>{
 	
 	Optional<Lead> findByEmail(String email);
+	
+	List<Lead> findAllByAgentEmail(String email);
 
 }

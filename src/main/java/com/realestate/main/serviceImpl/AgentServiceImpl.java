@@ -129,8 +129,11 @@ public class AgentServiceImpl implements AgentService {
 	}
 
 	@Override
-	public List<LeadDto> getAllLeads() {
-		List<Lead> allLeads = leadRepository.findAll();
+	public List<LeadDto> getAllLeadsByAgent(String email)throws AgentNotFoundException {
+	Agent agent = agentRepository.findByEmail(email).orElseThrow(
+			()-> new AgentNotFoundException("Agent with email :"+email+" is not found"));
+	
+		List<Lead> allLeads = leadRepository.findAllByAgentEmail(agent.getEmail());
 		List<LeadDto> collect = allLeads.stream().map(userMapper::toLeadDto).collect(Collectors.toList());
 				return collect;
 	}
@@ -149,7 +152,7 @@ public class AgentServiceImpl implements AgentService {
 
 
 	
-	public List<VisitDto> getAllVisits() {
+	public List<VisitDto> getAllVisits()  {
 	    List<Visit> visits = visitRepository.findAll();
 
       List<VisitDto> allVisits = visits.stream().map(userMapper::toVisitDto).collect(Collectors.toList());
