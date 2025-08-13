@@ -550,8 +550,9 @@ public class AdminServiceImpl implements AdminService {
 		List<Plots> list = plotsRepository.findByVentureVentureId(ventureId);
 		if (list.isEmpty())
 			throw new PropertyNotFoundException("Plots not found with venture id :" + ventureId);
-		List<Plots> list2 = list.stream().filter((plot) -> plot.getAssignStatus().equals(PropertyStatus.NOTASSIGNED))
-				.collect(Collectors.toList());
+		List<Plots> list2 = list.stream()
+			    .filter(plot -> plot.getAssignStatus() == null || PropertyStatus.NOTASSIGNED.equals(plot.getAssignStatus()))
+			    .collect(Collectors.toList());
 		if (list2.isEmpty())
 			throw new PropertyNotFoundException("No Plots found with NotAssigned Status..!!");
 		return list2;
