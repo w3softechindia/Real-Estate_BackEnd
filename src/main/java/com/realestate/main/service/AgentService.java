@@ -15,6 +15,7 @@ import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.RoleNotFoundException;
+import com.realestate.main.exceptions.TokenNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.exceptions.VisitNotFoundException;
 
@@ -40,9 +41,13 @@ public interface AgentService {
 	
    VisitDto updateVisitStatus(int visitId,String status,String reason) throws VisitNotFoundException;
    
+   List<VisitDto> getVisitsByStatus(String status) throws VisitNotFoundException;
+   
    TokenDto makePayment(int leadId,Token token) throws UserNotFoundException;
    
    List<TokenDto> getAllTokens();
+   
+   List<TokenDto> getAllTokensByAgencyStatus(String agencyStatus) throws TokenNotFoundException;
    
    AgentDto updateProfile(Agent agent,String email) throws AgentNotFoundException;
    

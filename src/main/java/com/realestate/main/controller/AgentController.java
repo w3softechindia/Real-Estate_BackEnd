@@ -29,6 +29,7 @@ import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.RoleNotFoundException;
+import com.realestate.main.exceptions.TokenNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.exceptions.VisitNotFoundException;
 import com.realestate.main.repository.VisitRepository;
@@ -144,5 +145,19 @@ return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 	public ResponseEntity<List<Post>> getAllPosts(){
 		List<Post> allPosts = agentService.getAllPosts();
 		return new ResponseEntity<List<Post>>(allPosts,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	@GetMapping("/getVisitsByStatus")
+	public ResponseEntity<List<VisitDto>> getAllVisitsByStatus(@RequestParam String status) throws VisitNotFoundException{
+		List<VisitDto> visitsByStatus = agentService.getVisitsByStatus(status);
+		return new ResponseEntity<List<VisitDto>>(visitsByStatus,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	@GetMapping("/getTokensByAgency")
+	public ResponseEntity<List<TokenDto>> getAllTokensByAgencyStatus(@RequestParam String agencyStatus)throws TokenNotFoundException{
+		List<TokenDto> allTokensByAgencyStatus = agentService.getAllTokensByAgencyStatus(agencyStatus);
+		return new ResponseEntity<List<TokenDto>>(allTokensByAgencyStatus,HttpStatus.OK);
 	}
 }

@@ -22,6 +22,7 @@ import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.RoleNotFoundException;
+import com.realestate.main.exceptions.TokenNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.exceptions.VisitNotFoundException;
 import com.realestate.main.mapper.UserMapper;
@@ -248,6 +249,29 @@ public class AgentServiceImpl implements AgentService {
 	@Override
 	public List<Post> getAllPosts() {
 		return postrepository.findAll();
+		
+	}
+
+	@Override
+	public List<VisitDto> getVisitsByStatus(String status) throws VisitNotFoundException {
+		List<Visit> byStatus = visitRepository.findByStatus(status);
+		if(byStatus.isEmpty()) {
+			throw new VisitNotFoundException(" Visits NotFound with Status :"+status);
+		}
+		
+		List<VisitDto> collect = byStatus.stream().map(userMapper::toVisitDto).collect(Collectors.toList());
+		return collect;
+	}
+
+	@Override
+	public List<TokenDto> getAllTokensByAgencyStatus(String agencyStatus) throws TokenNotFoundException {
+		// TODO Auto-generated method stub
+		List<Token> byAgencyStatus = tokenRepository.findByAgencyStatus(agencyStatus);
+		if(byAgencyStatus.isEmpty()) {
+			throw new TokenNotFoundException("Token Not Found With AgencyStatus :"+agencyStatus);
+		}
+		
+		return byAgencyStatus.stream().map(userMapper::toTokenDto).collect(Collectors.toList());
 		
 	}
 

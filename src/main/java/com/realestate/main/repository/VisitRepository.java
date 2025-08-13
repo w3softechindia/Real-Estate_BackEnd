@@ -12,5 +12,5 @@ public interface VisitRepository extends JpaRepository<Visit, Integer>{
 
 	//Optional<Visit> findByTokenId(String tokenId);
 	
-	
+	List<Visit> findByStatus(String status);
 }

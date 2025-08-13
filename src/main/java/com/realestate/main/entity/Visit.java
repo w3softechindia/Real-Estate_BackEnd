@@ -22,6 +22,7 @@ public class Visit {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int visitId;
 	private String propertyType;
+	private String propertyName;
 	private LocalDate visitDate;
 	private LocalTime visitTime;
 	private String notes;
