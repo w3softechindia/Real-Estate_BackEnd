@@ -2,6 +2,7 @@ package com.realestate.main.serviceImpl;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,6 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
-import com.realestate.main.dto.RealEStateUserDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Admin;
@@ -30,6 +30,7 @@ import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Plots;
 import com.realestate.main.entity.PropertyStatus;
 import com.realestate.main.entity.RealEStateUser;
+import com.realestate.main.entity.Reviews;
 import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.excelOperations.PlotExcelService;
@@ -38,7 +39,6 @@ import com.realestate.main.exceptions.DuplicateEntryException;
 import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.mapper.UserMapper;
-
 import com.realestate.main.repository.AdminRepository;
 import com.realestate.main.repository.AgencyRepository;
 import com.realestate.main.repository.AgencyVentureRepository;
@@ -46,6 +46,7 @@ import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.PlotsRepository;
 import com.realestate.main.repository.RealEstateUserRepo;
+import com.realestate.main.repository.ReviewsRepository;
 import com.realestate.main.repository.RoleRepository;
 import com.realestate.main.repository.VentureRepository;
 import com.realestate.main.service.AdminService;
@@ -82,6 +83,9 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	private PlotsRepository plotsRepository;
 
+	@Autowired
+	private final ReviewsRepository reviewsRepository;
+
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
 	@Autowired
@@ -89,7 +93,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private EmailUtil emailUtil;
-	
+
 	@Autowired
 	private PlotExcelService plotExcelService;
 
@@ -119,8 +123,10 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public AdminDto addAdmin(Admin admin) throws DuplicateEntryException {
 		// TODO Auto-generated method stub
-		if(userRepo.existsByEmail(admin.getEmail())) throw new DuplicateEntryException("Email Already Exists with :"+admin.getEmail());
-		if(userRepo.existsByPhoneNumber(admin.getPhoneNumber())) throw new DuplicateEntryException("Phone Number Already exists :"+admin.getPhoneNumber());
+		if (userRepo.existsByEmail(admin.getEmail()))
+			throw new DuplicateEntryException("Email Already Exists with :" + admin.getEmail());
+		if (userRepo.existsByPhoneNumber(admin.getPhoneNumber()))
+			throw new DuplicateEntryException("Phone Number Already exists :" + admin.getPhoneNumber());
 		Role role = roleRepository.findById("Admin").get();
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
@@ -137,8 +143,10 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public AgencyDto addAgency(Agency agency) throws Exception {
 		// TODO Auto-generated method stub
-		if(userRepo.existsByEmail(agency.getEmail())) throw new DuplicateEntryException("Email Already Exists with :"+agency.getEmail());
-		if(userRepo.existsByPhoneNumber(agency.getPhoneNumber())) throw new DuplicateEntryException("Phone Number Already exists :"+agency.getPhoneNumber());
+		if (userRepo.existsByEmail(agency.getEmail()))
+			throw new DuplicateEntryException("Email Already Exists with :" + agency.getEmail());
+		if (userRepo.existsByPhoneNumber(agency.getPhoneNumber()))
+			throw new DuplicateEntryException("Phone Number Already exists :" + agency.getPhoneNumber());
 		String password = agency.getPassword();
 		Role role = roleRepository.findById("Agency").get();
 		Set<Role> roles = new HashSet<Role>();
@@ -206,33 +214,41 @@ public class AdminServiceImpl implements AdminService {
 //		return agencyDto;
 //	}
 
-	
-	
-	//working method
+	// working method
 	@Override
 	public AgencyDto updateAgency(String email, Agency agency) throws UserNotFoundException {
-	    Agency agency2 = agencyRepository.findByEmail(email)
-	            .orElseThrow(() -> new UserNotFoundException("Agency not found with email: " + email));
+		Agency agency2 = agencyRepository.findByEmail(email)
+				.orElseThrow(() -> new UserNotFoundException("Agency not found with email: " + email));
 
-	    // Only update non-null and valid fields
-	    if (agency.getAgencyName() != null) agency2.setAgencyName(agency.getAgencyName());
-	    if (agency.getAgencyAddress() != null) agency2.setAgencyAddress(agency.getAgencyAddress());
-	    if (agency.getAgencyPinCode() != 0) agency2.setAgencyPinCode(agency.getAgencyPinCode());
-	    if (agency.getPhoneNumber() != 0) agency2.setPhoneNumber(agency.getPhoneNumber());
-	    if (agency.getCity() != null) agency2.setCity(agency.getCity());
-	    if (agency.getState() != null) agency2.setState(agency.getState());
-	    if (agency.getFbUrl() != null) agency2.setFbUrl(agency.getFbUrl());
-	    if (agency.getInstagramUrl() != null) agency2.setInstagramUrl(agency.getInstagramUrl());
-	    if (agency.getTwitterUrl() != null) agency2.setTwitterUrl(agency.getTwitterUrl());
-	    if (agency.getStatus() != null) agency2.setStatus(agency.getStatus());
+		// Only update non-null and valid fields
+		if (agency.getAgencyName() != null)
+			agency2.setAgencyName(agency.getAgencyName());
+		if (agency.getAgencyAddress() != null)
+			agency2.setAgencyAddress(agency.getAgencyAddress());
+		if (agency.getAgencyPinCode() != 0)
+			agency2.setAgencyPinCode(agency.getAgencyPinCode());
+		if (agency.getPhoneNumber() != 0)
+			agency2.setPhoneNumber(agency.getPhoneNumber());
+		if (agency.getCity() != null)
+			agency2.setCity(agency.getCity());
+		if (agency.getState() != null)
+			agency2.setState(agency.getState());
+		if (agency.getFbUrl() != null)
+			agency2.setFbUrl(agency.getFbUrl());
+		if (agency.getInstagramUrl() != null)
+			agency2.setInstagramUrl(agency.getInstagramUrl());
+		if (agency.getTwitterUrl() != null)
+			agency2.setTwitterUrl(agency.getTwitterUrl());
+		if (agency.getStatus() != null)
+			agency2.setStatus(agency.getStatus());
 
-	    // Do NOT update email here — it's your identifier
-	    // Do NOT update password or roles unless explicitly handled
+		// Do NOT update email here — it's your identifier
+		// Do NOT update password or roles unless explicitly handled
 
-	    Agency agency3 = agencyRepository.save(agency2);
-	    return userMapper.toAgencyDto(agency3);
+		Agency agency3 = agencyRepository.save(agency2);
+		return userMapper.toAgencyDto(agency3);
 	}
-	
+
 	@Override
 //	@Cacheable(value = "agency", key = "#email")
 	public AgencyDto getAgency(String email) throws UserNotFoundException {
@@ -550,9 +566,9 @@ public class AdminServiceImpl implements AdminService {
 		List<Plots> list = plotsRepository.findByVentureVentureId(ventureId);
 		if (list.isEmpty())
 			throw new PropertyNotFoundException("Plots not found with venture id :" + ventureId);
-		List<Plots> list2 = list.stream()
-			    .filter(plot -> plot.getAssignStatus() == null || PropertyStatus.NOTASSIGNED.equals(plot.getAssignStatus()))
-			    .collect(Collectors.toList());
+		List<Plots> list2 = list.stream().filter(
+				plot -> plot.getAssignStatus() == null || PropertyStatus.NOTASSIGNED.equals(plot.getAssignStatus()))
+				.collect(Collectors.toList());
 		if (list2.isEmpty())
 			throw new PropertyNotFoundException("No Plots found with NotAssigned Status..!!");
 		return list2;
@@ -561,10 +577,10 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public RealEStateUser getUserByEmail(String email) throws UserNotFoundException {
 		RealEStateUser byEmail = userRepo.findByEmail(email);
-		if(byEmail==null) {
-			throw new UserNotFoundException("user with email :"+email+" is not found.......");
+		if (byEmail == null) {
+			throw new UserNotFoundException("user with email :" + email + " is not found.......");
 		}
-		
+
 		return byEmail;
 	}
 
@@ -580,7 +596,7 @@ public class AdminServiceImpl implements AdminService {
 		List<Venture> allByVentureStatus = ventureRepository.findAllByVentureStatus("ACTIVE");
 		return allByVentureStatus;
 	}
-  
+
 //	@Override
 //	public long countUnassignedPlotsByVentureId(long ventureId) throws PropertyNotFoundException {
 //		// TODO Auto-generated method stub
@@ -596,4 +612,29 @@ public class AdminServiceImpl implements AdminService {
 //		long count = byVentureVentureId.stream().filter((plot)-> plot.getAssignStatus().equals(PropertyStatus.ASSIGNED)).count();
 //		return count;
 //	}
+
+//	---------------------------------------------------------
+	@Override
+	public Reviews sendReview(String agentEmail, String agencyEmail, String reviewText) {
+		Agent agent = agentRepository.findByEmail(agentEmail)
+				.orElseThrow(() -> new RuntimeException("Agent not found"));
+
+		Agency agency = agencyRepository.findByEmail(agencyEmail)
+				.orElseThrow(() -> new RuntimeException("Agency not found"));
+
+		Reviews review = new Reviews();
+		review.setAgent(agent);
+		review.setAgency(agency);
+		review.setReviewText(reviewText);
+
+		review.setCreatedAt(LocalDateTime.now());
+
+		return reviewsRepository.save(review);
+	}
+
+	@Override
+	public List<Reviews> getReviewsByAgentEmail(String agentEmail) {
+		return reviewsRepository.findByAgentEmail(agentEmail);
+	}
+
 }
