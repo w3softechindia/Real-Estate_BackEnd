@@ -1,6 +1,7 @@
 package com.realestate.main.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +30,9 @@ import com.realestate.main.entity.Post;
 import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.AgentNotFoundException;
+import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.RoleNotFoundException;
+import com.realestate.main.exceptions.TokenNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.exceptions.VisitNotFoundException;
 import com.realestate.main.repository.VisitRepository;
@@ -77,8 +81,8 @@ public class AgentController {
 	
 	@PreAuthorize("hasRole('Agent')")
 	@PostMapping("/addVisit")
-	public ResponseEntity<VisitDto> addVisit(@RequestBody Visit visit,@RequestParam int leadId)throws UserNotFoundException{
-     VisitDto savedVisit = agentService.addVisit(visit,leadId);
+	public ResponseEntity<VisitDto> addVisit(@RequestBody Visit visit,@RequestParam int leadId,@RequestParam long ventureId)throws UserNotFoundException, PropertyNotFoundException{
+     VisitDto savedVisit = agentService.addVisit(visit,leadId,ventureId);
      return new ResponseEntity<VisitDto>(savedVisit,HttpStatus.OK);
 	}
 	
@@ -112,8 +116,8 @@ public class AgentController {
 	
 	@PreAuthorize("hasRole('Agent')")
 	@PostMapping("/payment")
-public ResponseEntity<TokenDto> makePayment(@RequestParam int leadId,@RequestBody Token token) throws UserNotFoundException{
-	 TokenDto payment = agentService.makePayment(leadId, token);
+public ResponseEntity<TokenDto> addToken(@RequestParam int leadId,@RequestBody Token token) throws UserNotFoundException{
+	 TokenDto payment = agentService.addToken(leadId, token);
 return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 }
 	
@@ -145,4 +149,40 @@ return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 		List<Post> allPosts = agentService.getAllPosts();
 		return new ResponseEntity<List<Post>>(allPosts,HttpStatus.OK);
 	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	@GetMapping("/getVisitsByStatus")
+	public ResponseEntity<List<VisitDto>> getAllVisitsByStatus(@RequestParam String status) throws VisitNotFoundException{
+		List<VisitDto> visitsByStatus = agentService.getVisitsByStatus(status);
+		return new ResponseEntity<List<VisitDto>>(visitsByStatus,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	@GetMapping("/getTokensByAgency")
+	public ResponseEntity<List<TokenDto>> getAllTokensByAgencyStatus(@RequestParam String agencyStatus)throws TokenNotFoundException{
+		List<TokenDto> allTokensByAgencyStatus = agentService.getAllTokensByAgencyStatus(agencyStatus);
+		return new ResponseEntity<List<TokenDto>>(allTokensByAgencyStatus,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	@PutMapping("/payment")
+	public ResponseEntity<TokenDto> makepayment(@RequestParam int  tokenId,@RequestParam double finalAmount,@RequestParam String finalStatus) throws TokenNotFoundException{
+		TokenDto payment = agentService.makePayment(tokenId, finalAmount, finalStatus);
+		return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
+		
+	}
+	
+	@PreAuthorize("hasRole('Agent')")
+	  @GetMapping("/total/{agentId}")
+	    public ResponseEntity<Double> getTotalRevenue(@PathVariable int agentId) throws UserNotFoundException {
+	         Double totalRevenue = agentService.getTotalRevenue(agentId);
+	         return new ResponseEntity<>(totalRevenue,HttpStatus.OK);
+	    }
+	
+	@PreAuthorize("hasRole('Agent')")
+	 @GetMapping("/monthly/{agentId}")
+	    public ResponseEntity<Map<String, Double>> getMonthlyRevenue(@PathVariable int agentId) {
+	         Map<String,Double> monthlyRevenue = agentService.getMonthlyRevenue(agentId);
+	         return new ResponseEntity<Map<String,Double>>(monthlyRevenue,HttpStatus.OK);
+	    }
 }

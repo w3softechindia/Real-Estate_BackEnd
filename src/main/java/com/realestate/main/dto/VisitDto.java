@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.Date;
 
 import com.realestate.main.entity.Lead;
+import com.realestate.main.entity.Venture;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,4 +25,5 @@ public class VisitDto {
 	private String status;
 	private String reason;
 	private Lead lead;
+	private Venture venture;
 }

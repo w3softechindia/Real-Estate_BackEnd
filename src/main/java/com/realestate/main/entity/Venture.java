@@ -44,15 +44,25 @@ public class Venture implements Serializable{
 	private String state;
 	private long phno;
 	private long pincode;
+	private double price;
 	
 	@Enumerated(EnumType.STRING)
 	private PropertyStatus ventureStatus;
 	
+	@OneToMany(mappedBy = "venture", cascade = CascadeType.ALL)
+	@JsonManagedReference(value = "venture-visits") // Venture is the parent side
+	private List<Visit> visits;
+
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "venture")
-	@JsonManagedReference
+	@JsonManagedReference(value = "venture-plots")
 	private List<Plots> plots;
 	
 	@OneToMany(mappedBy = "venture", cascade = CascadeType.ALL)
 	@JsonManagedReference("venture-agency")
 	private List<AgencyVenture> agencyVentures;
+	
+	@OneToMany(mappedBy = "venture",cascade = CascadeType.ALL)
+	@JsonManagedReference(value = "venture-tokens")
+	private List<Token> token;
 }

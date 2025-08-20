@@ -584,6 +584,7 @@ public class AdminServiceImpl implements AdminService {
 		return byEmail;
 	}
 
+
 	public List<Agency> getActiveAgencies() {
 		// TODO Auto-generated method stub
 		List<Agency> allByStatus = agencyRepository.findAllByStatus("ACTIVE");
