@@ -36,4 +36,5 @@ public class AgentDto implements Serializable{
 	private Agency agency;
 	private List<Customer> customers;
 	private String status;
+	private int leadCounts;
 }

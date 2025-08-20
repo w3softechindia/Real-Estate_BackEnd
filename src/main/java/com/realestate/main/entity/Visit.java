@@ -3,6 +3,8 @@ package com.realestate.main.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +24,6 @@ public class Visit {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int visitId;
 	private String propertyType;
-	private String propertyName;
 	private LocalDate visitDate;
 	private LocalTime visitTime;
 	private String notes;
@@ -32,6 +33,10 @@ public class Visit {
 	private String reason;
 	
 	@ManyToOne
-	@JsonBackReference
+	@JsonBackReference(value = "lead-visits")
 	private Lead lead;
+	
+	 @ManyToOne
+	 @JsonBackReference(value = "venture-visits")
+	 private Venture venture;
 }

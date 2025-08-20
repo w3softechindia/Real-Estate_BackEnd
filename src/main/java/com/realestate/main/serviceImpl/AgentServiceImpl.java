@@ -1,8 +1,12 @@
 package com.realestate.main.serviceImpl;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +15,20 @@ import org.springframework.stereotype.Service;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.LeadDto;
+import com.realestate.main.dto.RevenueDto;
 import com.realestate.main.dto.TokenDto;
 import com.realestate.main.dto.VisitDto;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Post;
+import com.realestate.main.entity.Revenue;
 import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Token;
+import com.realestate.main.entity.Venture;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.AgentNotFoundException;
+import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.RoleNotFoundException;
 import com.realestate.main.exceptions.TokenNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
@@ -30,8 +38,10 @@ import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.LeadRepository;
 import com.realestate.main.repository.Postrepository;
+import com.realestate.main.repository.RevenueRepository;
 import com.realestate.main.repository.RoleRepository;
 import com.realestate.main.repository.TokenRepository;
+import com.realestate.main.repository.VentureRepository;
 import com.realestate.main.repository.VisitRepository;
 import com.realestate.main.service.AgentService;
 
@@ -63,6 +73,12 @@ public class AgentServiceImpl implements AgentService {
 	
 	@Autowired
 	private Postrepository postrepository;
+	
+	@Autowired
+	private VentureRepository ventureRepository;
+	
+	@Autowired
+	private RevenueRepository revenueRepository;
 
 
 	@Override
@@ -118,11 +134,15 @@ public class AgentServiceImpl implements AgentService {
 	
 	@Override
 	public LeadDto addLead(Lead lead,String agentemail) throws AgentNotFoundException {
-		
+		getAllLeadsByAgent(agentemail);
 		Agent agent = agentRepository.findByEmail(agentemail).orElseThrow(
 				()->new AgentNotFoundException("Agent not found with email :"+agentemail));
 		
 		lead.setAgent(agent);
+		int leadCounts = agent.getLeadCounts();
+		agent.setLeadCounts(leadCounts+1);
+		agentRepository.save(agent);
+		
 	      Lead saveLead = leadRepository.save(lead);
 	      
 	      LeadDto leadDto = userMapper.toLeadDto(saveLead);
@@ -135,16 +155,22 @@ public class AgentServiceImpl implements AgentService {
 			()-> new AgentNotFoundException("Agent with email :"+email+" is not found"));
 	
 		List<Lead> allLeads = leadRepository.findAllByAgentEmail(agent.getEmail());
+		agent.setLeadCounts(allLeads.size());
+		agentRepository.save(agent);
 		List<LeadDto> collect = allLeads.stream().map(userMapper::toLeadDto).collect(Collectors.toList());
 				return collect;
 	}
 
 	@Override
-	public VisitDto addVisit(Visit visit,int leadId) throws UserNotFoundException{
+	public VisitDto addVisit(Visit visit,int leadId,long ventureId) throws UserNotFoundException, PropertyNotFoundException{
 		Lead lead = leadRepository.findById(leadId).
 				orElseThrow(()->new UserNotFoundException("Lead With ID : "+leadId+" is Not Found....."));
 		
+		Venture venture = ventureRepository.findById(ventureId)
+		.orElseThrow(()->new PropertyNotFoundException("Venture with Id :"+ventureId+"is not found......"));
+		
 		visit.setLead(lead);		
+		visit.setVenture(venture);
 		Visit saveVisit = visitRepository.save(visit);
 	
 		VisitDto visitDto = userMapper.toVisitDto(saveVisit);
@@ -227,7 +253,7 @@ public class AgentServiceImpl implements AgentService {
 	}
 
 	@Override
-	public TokenDto makePayment(int leadId, Token token) throws UserNotFoundException {
+	public TokenDto addToken(int leadId, Token token) throws UserNotFoundException {
 		 Lead lead = leadRepository.findById(leadId).orElseThrow(
 				()->new UserNotFoundException("Lead With Id  :"+leadId+" is not Found..."));
 		
@@ -274,5 +300,49 @@ public class AgentServiceImpl implements AgentService {
 		return byAgencyStatus.stream().map(userMapper::toTokenDto).collect(Collectors.toList());
 		
 	}
+
+	@Override
+	public TokenDto makePayment(int tokenId, double finalAmount, String finalStatus) throws TokenNotFoundException {
+		// TODO Auto-generated method stub
+		Token tokenById = tokenRepository.findById(tokenId).
+				orElseThrow(()-> new TokenNotFoundException("Token With ID is :"+tokenId+" is not present..."));
+		tokenById.setFinalStatus(finalStatus);
+		tokenById.setFinalAmount(finalAmount);
+		
+		Token save = tokenRepository.save(tokenById);
+		 Lead lead = tokenById.getLead();
+	        Agent agent = lead.getAgent();
+	        Venture venture = tokenById.getVenture(); 
+	        
+	        Revenue revenue = new Revenue();
+	        revenue.setAgent(agent);
+	        revenue.setRevenue(venture.getPrice());  // or use finalAmount if that’s the actual paid amount
+	        revenue.setTransactionDate(new Date());
+
+	        revenueRepository.save(revenue);
+		TokenDto tokenDto = userMapper.toTokenDto(save);
+		return tokenDto;
+	}
+
+	@Override
+	public Double getTotalRevenue(int agentId) throws UserNotFoundException {
+		Double totalRevenueByAgent = revenueRepository.getTotalRevenueByAgent(agentId);
+		if(totalRevenueByAgent==null) {
+			throw new UserNotFoundException("Agent with ID is :"+agentId+" not having any revenue");
+		}
+		return totalRevenueByAgent;
+	}
+
+	 public Map<String, Double> getMonthlyRevenue(int agentId) {
+	        List<Object[]> results = revenueRepository.getMonthlyRevenueByAgent(agentId);
+
+	        Map<String, Double> monthlyRevenue = new LinkedHashMap<>();
+	        for (Object[] row : results) {
+	            int month = (int) row[0];
+	            double revenue = (double) row[1];
+	            monthlyRevenue.put(Month.of(month).name(), revenue);
+	        }
+	        return monthlyRevenue;
+	    }
 
 }

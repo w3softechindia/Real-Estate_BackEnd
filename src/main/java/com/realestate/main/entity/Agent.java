@@ -34,6 +34,8 @@ public class Agent extends RealEStateUser{
 	private String state;
 	private LocalDate registrationDate;
 	private String status;
+	private int leadCounts;
+	private double totalRevenue;
 	
 	@ManyToOne
 	@JsonBackReference("agency-agent")
@@ -46,4 +48,8 @@ public class Agent extends RealEStateUser{
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "agent")
 	@JsonManagedReference
 	private List<Lead> leads;
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "agent")
+	@JsonManagedReference
+	private List<Revenue> revenues;
 }

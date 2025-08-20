@@ -1,6 +1,11 @@
 package com.realestate.main.dto;
 
 import java.util.Date;
+import java.util.List;
+
+import com.realestate.main.entity.Agent;
+import com.realestate.main.entity.Token;
+import com.realestate.main.entity.Visit;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +27,8 @@ public class LeadDto {
 	private String leadStatus;
 	private Date followUp;
 	private String leadNotes;
+	private Agent agent;
+	private List<Token> tokens;
+	private List<Visit> visits;
 
 }

@@ -1,8 +1,9 @@
 package com.realestate.main.entity;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,29 +13,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Token {
+@Data
+public class Revenue {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int tokenid;
-	private double amount;
-	private String transactionMode;
-	private String agencyStatus;
-	private LocalDate tokenDeadLine;
-	private String agentName;
-	private String finalStatus;
-	private double finalAmount;
-
+	private long revenueId;
+	private double revenue;
+	private Date transactionDate;
 	
 	@ManyToOne
-	@JsonBackReference(value = "lead-tokens")
-	private Lead lead;
-	
-	@ManyToOne
-	@JsonBackReference(value = "venture-tokens")
-	private Venture venture;
+	@JsonBackReference
+	private Agent agent;
 }

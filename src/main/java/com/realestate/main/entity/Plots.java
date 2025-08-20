@@ -36,7 +36,7 @@ public class Plots {
 	private boolean isCornerPlot;
 	
 	@ManyToOne
-	@JsonBackReference
+	@JsonBackReference(value = "venture-plots")
 	private Venture venture;
 	
 	@Enumerated(EnumType.STRING)

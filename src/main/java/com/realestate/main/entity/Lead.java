@@ -46,10 +46,10 @@ public class Lead {
 	private Agent agent;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "lead")
-	@JsonManagedReference
+	@JsonManagedReference(value = "lead-tokens")
 	private List<Token> tokens;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "lead")
-	@JsonManagedReference
+	@JsonManagedReference(value = "lead-visits")
 	private List<Visit> visits;
 }
