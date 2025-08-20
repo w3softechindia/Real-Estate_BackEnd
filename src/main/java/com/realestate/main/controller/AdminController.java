@@ -1,13 +1,16 @@
 package com.realestate.main.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +31,7 @@ import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Plots;
 import com.realestate.main.entity.RealEStateUser;
+import com.realestate.main.entity.Reviews;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.exceptions.AgencyNotFoundException;
 import com.realestate.main.exceptions.DuplicateEntryException;
@@ -76,7 +80,7 @@ public class AdminController {
 		return new ResponseEntity<AdminDto>(admin, HttpStatus.OK);
 	}
 
-@PreAuthorize("hasRole('Admin') or hasRole('Agency')")
+	@PreAuthorize("hasRole('Admin') or hasRole('Agency')")
 	@PutMapping("/updateAgency")
 	public ResponseEntity<AgencyDto> updateAgency(@RequestParam String email, @RequestBody Agency agency)
 			throws UserNotFoundException {
@@ -269,17 +273,20 @@ public class AdminController {
 
 	@PreAuthorize("hasAnyRole('Admin','Agency')")
 	@GetMapping("/getUnAssignedPlots")
-	public ResponseEntity<List<Plots>> getUnAssignedPlots(@RequestParam long ventureId) throws PropertyNotFoundException {
+	public ResponseEntity<List<Plots>> getUnAssignedPlots(@RequestParam long ventureId)
+			throws PropertyNotFoundException {
 		List<Plots> unAssignedPlots = adminService.getUnAssignedPlots(ventureId);
 		return new ResponseEntity<List<Plots>>(unAssignedPlots, HttpStatus.OK);
 	}
-	
+
 	@PreAuthorize("hasAnyRole('Admin','Agency','Agent')")
-    @GetMapping("/getUserByEmail")
-	public ResponseEntity<?> getUserByEmail(@RequestParam String email) throws UserNotFoundException{
+	@GetMapping("/getUserByEmail")
+	public ResponseEntity<?> getUserByEmail(@RequestParam String email) throws UserNotFoundException {
 		RealEStateUser userByEmail = adminService.getUserByEmail(email);
+
 		return new ResponseEntity<>(userByEmail,HttpStatus.OK);
 	}
+
 
 
 	@PreAuthorize("hasRole('Admin')")
@@ -288,10 +295,10 @@ public class AdminController {
 		List<Agency> activeAgencies = adminService.getActiveAgencies();
 		return new ResponseEntity<List<Agency>>(activeAgencies, HttpStatus.OK);
 	}
-	
+
 	@PreAuthorize("hasAnyRole('Admin','Agency')")
 	@GetMapping("/getActiveVentures")
-	public ResponseEntity<List<Venture>> getActiveVentures(){
+	public ResponseEntity<List<Venture>> getActiveVentures() {
 		List<Venture> activeVentures = adminService.getActiveVentures();
 		return new ResponseEntity<List<Venture>>(activeVentures, HttpStatus.OK);
 
@@ -310,4 +317,24 @@ public class AdminController {
 //		long countPlotsByVentureId = adminService.countAssignedPlotsByVentureId(ventureId);
 //		return new ResponseEntity<Long>(countPlotsByVentureId, HttpStatus.OK);
 //	}
+
+//	----------------------------------------------------------------------------------------
+
+	@PreAuthorize("hasRole('Agency')")
+	@PostMapping("/send")
+	public ResponseEntity<Reviews> sendReviewByAgentEmail(@RequestParam String agentEmail, @RequestBody Reviews review,
+			Principal principal) {
+
+		String agencyEmail = principal.getName(); // logged-in agency's email
+
+		Reviews savedReview = adminService.sendReview(agentEmail, agencyEmail, review.getReviewText());
+
+		return ResponseEntity.ok(savedReview);
+	}
+
+	@PreAuthorize("hasRole('Agency')")
+	@GetMapping("/agent/{agentEmail}")
+	public ResponseEntity<List<Reviews>> getReviewsForAgent(@PathVariable String agentEmail) {
+		return ResponseEntity.ok(adminService.getReviewsByAgentEmail(agentEmail));
+	}
 }
