@@ -157,7 +157,7 @@ return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 		return new ResponseEntity<List<VisitDto>>(visitsByStatus,HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasRole('Agent')")
+	@PreAuthorize("hasAnyRole('Agent','Agency')")
 	@GetMapping("/getTokensByAgency")
 	public ResponseEntity<List<TokenDto>> getAllTokensByAgencyStatus(@RequestParam String agencyStatus)throws TokenNotFoundException{
 		List<TokenDto> allTokensByAgencyStatus = agentService.getAllTokensByAgencyStatus(agencyStatus);
@@ -185,4 +185,9 @@ return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 	         Map<String,Double> monthlyRevenue = agentService.getMonthlyRevenue(agentId);
 	         return new ResponseEntity<Map<String,Double>>(monthlyRevenue,HttpStatus.OK);
 	    }
+	
+	
+	
+
+
 }

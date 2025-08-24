@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -180,6 +181,8 @@ public class AgencyServiceImpl implements AgencyService {
 		postRepository.delete(post);
 	}
 
+	
+//	-------------------------------------------------------------------------------
 	@Override
 	public List<Post> getAllPostsByAgency(String email) throws Exception {
 		Agency agency = agencyRepository.findByEmail(email)
@@ -188,5 +191,22 @@ public class AgencyServiceImpl implements AgencyService {
 		return postRepository.findByAgencyEmail(agency.getEmail());
 
 	}
+	
+	
+	  @Override
+	    public String updateFinalStatus(int tokenId, String finalStatus) {
+	        Token token = tokenRepository.findById(tokenId)
+	                .orElseThrow(() -> new RuntimeException("Token not found with id: " + tokenId));
+
+	        token.setFinalStatus(finalStatus);
+	        tokenRepository.save(token);
+
+	        return "Final status updated successfully for Token ID: " + tokenId;
+	    }
+	  
+	  
+
+	  
+	 
 
 }
