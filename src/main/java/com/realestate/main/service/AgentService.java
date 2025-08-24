@@ -62,5 +62,9 @@ public interface AgentService {
    Double getTotalRevenue(int agentId) throws UserNotFoundException;
    
    Map<String, Double> getMonthlyRevenue(int agentId);
+   
+
+
+   
 
 }
