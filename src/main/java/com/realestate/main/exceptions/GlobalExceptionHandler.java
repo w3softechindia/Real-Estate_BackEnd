@@ -63,4 +63,10 @@ public class GlobalExceptionHandler {
 		ErrorDetails details=new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(ReviewNotFoundException.class)
+	public ResponseEntity<?> handleReviewNotFound(ReviewNotFoundException exception,WebRequest request){
+		ErrorDetails details=new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false));
+		return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
+	}
 }

@@ -16,6 +16,7 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.RevenueDto;
+import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.TokenDto;
 import com.realestate.main.dto.VisitDto;
 import com.realestate.main.entity.Agent;
@@ -23,12 +24,14 @@ import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Post;
 import com.realestate.main.entity.Revenue;
+import com.realestate.main.entity.Reviews;
 import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.PropertyNotFoundException;
+import com.realestate.main.exceptions.ReviewNotFoundException;
 import com.realestate.main.exceptions.RoleNotFoundException;
 import com.realestate.main.exceptions.TokenNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
@@ -39,6 +42,7 @@ import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.LeadRepository;
 import com.realestate.main.repository.Postrepository;
 import com.realestate.main.repository.RevenueRepository;
+import com.realestate.main.repository.ReviewsRepository;
 import com.realestate.main.repository.RoleRepository;
 import com.realestate.main.repository.TokenRepository;
 import com.realestate.main.repository.VentureRepository;
@@ -79,6 +83,9 @@ public class AgentServiceImpl implements AgentService {
 	
 	@Autowired
 	private RevenueRepository revenueRepository;
+	
+	@Autowired
+	private ReviewsRepository reviewsRepository;
 
 
 	@Override
@@ -344,5 +351,19 @@ public class AgentServiceImpl implements AgentService {
 	        }
 	        return monthlyRevenue;
 	    }
+
+	@Override
+	public ReviewDto reviewResponse(int reviewId,String response) throws ReviewNotFoundException {
+		// TODO Auto-generated method stub
+		Reviews reviews = reviewsRepository.findById(reviewId).
+		orElseThrow(()-> new ReviewNotFoundException("Review With ID : "+reviewId+" Is Not Found......."));
+		
+		reviews.setResponse(response);		
+		
+		Reviews save = reviewsRepository.save(reviews);	
+		ReviewDto reviewDto = userMapper.toReviewDto(save);
+		return reviewDto;
+		
+		}
 
 }

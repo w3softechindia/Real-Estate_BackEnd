@@ -22,7 +22,7 @@ public class Reviews {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private int id;
 
 	// The agent receiving the review
 	@ManyToOne(optional = false)
@@ -40,4 +40,6 @@ public class Reviews {
 	private int rating; // optional: 1–5 stars
 
 	private LocalDateTime createdAt;
+	
+	private String response;
 }
