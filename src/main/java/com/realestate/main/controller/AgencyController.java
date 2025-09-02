@@ -93,4 +93,20 @@ public class AgencyController {
 		return new ResponseEntity<TokenDto>(acceptToken,HttpStatus.OK);
 	}
 
+//	-----------------------------------------------------------------------------
+	
+	@PutMapping("/finalStatus/{id}")
+	public String updateFinalStatus(@PathVariable int id, @RequestParam String finalStatus) {
+	    return agencyService.updateFinalStatus(id, finalStatus);
+	}
+
+	
+	
+	
+	
+
+	 
+
+
+	
 }

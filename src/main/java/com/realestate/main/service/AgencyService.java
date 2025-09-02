@@ -18,10 +18,8 @@ public interface AgencyService {
 
 	String deleteAgent(String email) throws UserNotFoundException;
 
-	
 	TokenDto acceptToken(int tokenId,String agencyStatus) throws UserNotFoundException;
-
-
+	
 	Post addPost(String agencyEmail, Post post) throws Exception;
 
 	Post updatePost(Long postId, Post updatedPost) throws Exception;
@@ -29,5 +27,13 @@ public interface AgencyService {
 	void deletePost(Long postId) throws Exception;
 	
 	List<Post> getAllPostsByAgency(String email) throws Exception;
+	
+//	--------------------------------------------------------------------------
+	
+	String updateFinalStatus(int tokenId, String finalStatus);
+	
+	
+	 
+
 
 }
