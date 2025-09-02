@@ -26,6 +26,7 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
@@ -34,6 +35,7 @@ import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Reviews;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.exceptions.AgencyNotFoundException;
+import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.DuplicateEntryException;
 import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
@@ -322,19 +324,16 @@ public class AdminController {
 
 	@PreAuthorize("hasRole('Agency')")
 	@PostMapping("/send")
-	public ResponseEntity<Reviews> sendReviewByAgentEmail(@RequestParam String agentEmail, @RequestBody Reviews review,
-			Principal principal) {
+	public ResponseEntity<Reviews> sendReviewByAgentEmail(@RequestParam String agentEmail, @RequestParam String agencyEmail, @RequestParam String reviewText) {
 
-		String agencyEmail = principal.getName(); // logged-in agency's email
-
-		Reviews savedReview = adminService.sendReview(agentEmail, agencyEmail, review.getReviewText());
+		Reviews savedReview = adminService.sendReview(agentEmail, agencyEmail, reviewText);
 
 		return ResponseEntity.ok(savedReview);
 	}
 
-	@PreAuthorize("hasRole('Agency')")
+	@PreAuthorize("hasAnyRole('Agency','Agent')")
 	@GetMapping("/agent/{agentEmail}")
-	public ResponseEntity<List<Reviews>> getReviewsForAgent(@PathVariable String agentEmail) {
+	public ResponseEntity<List<ReviewDto>> getReviewsForAgent(@PathVariable String agentEmail) throws AgentNotFoundException {
 		return ResponseEntity.ok(adminService.getReviewsByAgentEmail(agentEmail));
 	}
 }

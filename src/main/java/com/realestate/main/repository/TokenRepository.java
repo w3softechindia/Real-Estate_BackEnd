@@ -16,9 +16,4 @@ public interface TokenRepository extends JpaRepository<Token, Integer>{
 
 	List<Token> findByAgencyStatus(String agencyStatus);
 
-	
-
-	
-	 
-
 }

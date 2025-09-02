@@ -3,11 +3,11 @@ package com.realestate.main.service;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.RevenueDto;
+import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.TokenDto;
 import com.realestate.main.dto.VisitDto;
 import com.realestate.main.entity.Agent;
@@ -18,6 +18,7 @@ import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Visit;
 import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.PropertyNotFoundException;
+import com.realestate.main.exceptions.ReviewNotFoundException;
 import com.realestate.main.exceptions.RoleNotFoundException;
 import com.realestate.main.exceptions.TokenNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
@@ -63,8 +64,7 @@ public interface AgentService {
    
    Map<String, Double> getMonthlyRevenue(int agentId);
    
-
-
-   
+   ReviewDto reviewResponse(int reviewId,String response) throws ReviewNotFoundException;
+ 
 
 }

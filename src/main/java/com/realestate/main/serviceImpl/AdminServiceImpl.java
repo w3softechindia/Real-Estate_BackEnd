@@ -20,6 +20,7 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Admin;
@@ -35,6 +36,7 @@ import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.excelOperations.PlotExcelService;
 import com.realestate.main.exceptions.AgencyNotFoundException;
+import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.DuplicateEntryException;
 import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
@@ -634,8 +636,14 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<Reviews> getReviewsByAgentEmail(String agentEmail) {
-		return reviewsRepository.findByAgentEmail(agentEmail);
+	public List<ReviewDto> getReviewsByAgentEmail(String agentEmail) throws AgentNotFoundException {
+		 List<Reviews> byAgentEmail = reviewsRepository.findByAgentEmail(agentEmail);
+		 if(byAgentEmail.isEmpty()) {
+			 throw new AgentNotFoundException("Agent not found with mail :"+agentEmail);
+		 }
+		 
+		return  userMapper.toReviews(byAgentEmail);
+		 
 	}
 
 }
