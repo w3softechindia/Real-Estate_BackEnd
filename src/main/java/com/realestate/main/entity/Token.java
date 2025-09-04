@@ -27,7 +27,7 @@ public class Token {
 	private LocalDate tokenDeadLine;
 	private String agentName;
 	private String finalStatus;
-	private double finalAmount;
+	private long finalAmount;
 
 	
 	@ManyToOne
@@ -38,3 +38,4 @@ public class Token {
 	@JsonBackReference(value = "venture-tokens")
 	private Venture venture;
 }
+
