@@ -28,6 +28,7 @@ public class Token {
 	private String agentName;
 	private String finalStatus;
 	private long finalAmount;
+
 	
 	@ManyToOne
 	@JsonBackReference(value = "lead-tokens")
@@ -37,3 +38,4 @@ public class Token {
 	@JsonBackReference(value = "venture-tokens")
 	private Venture venture;
 }
+
