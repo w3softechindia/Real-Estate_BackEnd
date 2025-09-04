@@ -168,7 +168,7 @@ return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 	
 	@PreAuthorize("hasRole('Agent')")
 	@PutMapping("/payment")
-	public ResponseEntity<TokenDto> makepayment(@RequestParam int  tokenId,@RequestParam double finalAmount,@RequestParam String finalStatus) throws TokenNotFoundException{
+	public ResponseEntity<TokenDto> makepayment(@RequestParam int  tokenId,@RequestParam long finalAmount,@RequestParam String finalStatus) throws TokenNotFoundException{
 		TokenDto payment = agentService.makePayment(tokenId, finalAmount, finalStatus);
 		return new ResponseEntity<TokenDto>(payment,HttpStatus.OK);
 		

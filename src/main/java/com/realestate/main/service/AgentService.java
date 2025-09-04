@@ -58,7 +58,7 @@ public interface AgentService {
    
    List<Post> getAllPosts();
    
-   TokenDto makePayment(int tokenId,double finalAmount,String finalStatus) throws TokenNotFoundException;
+   TokenDto makePayment(int tokenId, long finalAmount,String finalStatus) throws TokenNotFoundException;
    
    Double getTotalRevenue(int agentId) throws UserNotFoundException;
    
