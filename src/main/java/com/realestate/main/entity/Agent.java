@@ -34,8 +34,8 @@ public class Agent extends RealEStateUser{
 	private String state;
 	private LocalDate registrationDate;
 	private String status;
-	private int leadCounts;
-	private double totalRevenue;
+	private long leadsCount;
+	private long totalRevenue;
 	
 	@ManyToOne
 	@JsonBackReference("agency-agent")

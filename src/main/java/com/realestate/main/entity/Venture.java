@@ -44,7 +44,7 @@ public class Venture implements Serializable{
 	private String state;
 	private long phno;
 	private long pincode;
-	private double price;
+	private long price;
 	
 	@Enumerated(EnumType.STRING)
 	private PropertyStatus ventureStatus;

@@ -148,8 +148,8 @@ public class AgentServiceImpl implements AgentService {
 				()->new AgentNotFoundException("Agent not found with email :"+agentemail));
 		
 		lead.setAgent(agent);
-		int leadCounts = agent.getLeadCounts();
-		agent.setLeadCounts(leadCounts+1);
+		long leadCounts = agent.getLeadsCount();
+		agent.setLeadsCount(leadCounts+1);		//agent.setLeadCounts(leadCounts+1);
 		agentRepository.save(agent);
 		
 	      Lead saveLead = leadRepository.save(lead);
@@ -164,7 +164,7 @@ public class AgentServiceImpl implements AgentService {
 			()-> new AgentNotFoundException("Agent with email :"+email+" is not found"));
 	
 		List<Lead> allLeads = leadRepository.findAllByAgentEmail(agent.getEmail());
-		agent.setLeadCounts(allLeads.size());
+		agent.setLeadsCount(allLeads.size());
 		agentRepository.save(agent);
 		List<LeadDto> collect = allLeads.stream().map(userMapper::toLeadDto).collect(Collectors.toList());
 				return collect;
@@ -311,7 +311,7 @@ public class AgentServiceImpl implements AgentService {
 	}
 
 	@Override
-	public TokenDto makePayment(int tokenId, double finalAmount, String finalStatus) throws TokenNotFoundException {
+	public TokenDto makePayment(int tokenId, long finalAmount, String finalStatus) throws TokenNotFoundException {
 		// TODO Auto-generated method stub
 		Token tokenById = tokenRepository.findById(tokenId).
 				orElseThrow(()-> new TokenNotFoundException("Token With ID is :"+tokenId+" is not present..."));
