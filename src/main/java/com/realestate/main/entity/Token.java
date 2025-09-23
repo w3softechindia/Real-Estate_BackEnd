@@ -38,11 +38,13 @@ public class Token {
 	@JsonBackReference(value = "lead-tokens")
 	private Lead lead;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "venture_id", referencedColumnName = "ventureId")
 	@JsonBackReference(value = "venture-tokens")
 	@JsonIgnoreProperties({"token", "plots", "visits", "agencyVentures"}) 
 	private Venture venture;
 	
+
 
 
 }
