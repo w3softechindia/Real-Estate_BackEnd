@@ -2,9 +2,7 @@ package com.realestate.main.entity;
 
 import java.io.Serializable;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -62,7 +60,8 @@ public class Venture implements Serializable{
 	@JsonManagedReference("venture-agency")
 	private List<AgencyVenture> agencyVentures;
 	
-	@OneToMany(mappedBy = "venture",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "venture",cascade = CascadeType.ALL,orphanRemoval = true)
 	@JsonManagedReference(value = "venture-tokens")
 	private List<Token> token;
+	
 }
