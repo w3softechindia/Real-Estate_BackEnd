@@ -45,7 +45,5 @@ public class Token {
 	private Venture venture;
 	
 
-
-
 }
 
