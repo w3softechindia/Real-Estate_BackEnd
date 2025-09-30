@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.PostDto;
 import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.emailConfiguration.EmailUtil;
@@ -29,6 +31,7 @@ import com.realestate.main.entity.AgencyVenture;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.Post;
 import com.realestate.main.entity.PropertyStatus;
 import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Reviews;
@@ -38,6 +41,7 @@ import com.realestate.main.excelOperations.PlotExcelService;
 import com.realestate.main.exceptions.AgencyNotFoundException;
 import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.DuplicateEntryException;
+import com.realestate.main.exceptions.PostNotFoundException;
 import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.mapper.UserMapper;
@@ -47,6 +51,7 @@ import com.realestate.main.repository.AgencyVentureRepository;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.PlotsRepository;
+import com.realestate.main.repository.Postrepository;
 import com.realestate.main.repository.RealEstateUserRepo;
 import com.realestate.main.repository.ReviewsRepository;
 import com.realestate.main.repository.RoleRepository;
@@ -84,6 +89,9 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private PlotsRepository plotsRepository;
+	
+	@Autowired
+	private Postrepository postrepository;
 
 	@Autowired
 	private final ReviewsRepository reviewsRepository;
@@ -645,5 +653,38 @@ public class AdminServiceImpl implements AdminService {
 		return  userMapper.toReviews(byAgentEmail);
 		 
 	}
+	
+	@Override
+	public PostDto adminPosts(String adminEmail, Post post) throws UserNotFoundException {
+		Admin admin = adminRepository.findByEmail(adminEmail)
+		.orElseThrow(()-> new UserNotFoundException("Admin with email  :"+adminEmail+" is not present..."));
+		 
+		post.setAdmin(admin);		
+		Post save = postrepository.save(post);
+		
+		PostDto postDto = userMapper.toPostDto(save);
+
+		
+		return postDto;
+	}
+
+	@Override
+	public List<PostDto> getPosts(String email) throws  UserNotFoundException {
+		Admin admin = adminRepository.findByEmail(email)
+				.orElseThrow(()-> new UserNotFoundException("Admin with email  :"+email+" is not present..."));
+		
+		List<Post> byAdminEmail = postrepository.findByAdminEmail(email);
+		return byAdminEmail.stream().map(userMapper::toPostDto).collect(Collectors.toList());
+	}
+
+	@Override
+	public String deletePost(Long id) throws PostNotFoundException {
+		Post post = postrepository.findById(id)
+				.orElseThrow(()-> new PostNotFoundException("Post With Id :"+id+" is not found...."));
+		postrepository.deleteById(post.getId());		
+		return "post Deleted SuccessFully..........";
+	}
+
+	
 
 }

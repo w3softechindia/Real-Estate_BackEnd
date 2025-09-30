@@ -1,24 +1,17 @@
-package com.realestate.main.entity;
+package com.realestate.main.dto;
 
 import java.time.LocalDate;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import com.realestate.main.entity.Admin;
+import com.realestate.main.entity.Agency;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Post {
+@NoArgsConstructor
+public class PostDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
     public String type;
@@ -41,11 +34,9 @@ public class Post {
 
     public String attachmentPath;
     
-    @ManyToOne
+    
     private Agency agency;
 
-    @ManyToOne
-    private Admin admin;
-
     
+    private Admin admin;
 }

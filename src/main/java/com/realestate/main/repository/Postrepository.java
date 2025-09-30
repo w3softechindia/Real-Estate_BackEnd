@@ -17,6 +17,7 @@ public interface Postrepository extends JpaRepository<Post, Long> {
 
 	List<Post> findByAgencyEmail(String email);
 
+	List<Post> findByAdminEmail(String email);
 	
 
 	
