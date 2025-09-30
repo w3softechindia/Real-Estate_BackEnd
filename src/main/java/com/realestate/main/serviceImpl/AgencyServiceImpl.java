@@ -17,6 +17,7 @@ import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Post;
+import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Role;
 import com.realestate.main.entity.Token;
 import com.realestate.main.exceptions.DuplicateEntryException;
@@ -44,6 +45,7 @@ public class AgencyServiceImpl implements AgencyService {
 	@Autowired
 	private AgencyRepository agencyRepository;
 
+
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
 	@Autowired
@@ -60,6 +62,8 @@ public class AgencyServiceImpl implements AgencyService {
 
 	@Autowired
 	private Postrepository postRepository;
+	
+	
 
 	@Override
 	public AgentDto addAgent(String agencyEmail, Agent agent) throws Exception {
@@ -133,7 +137,7 @@ public class AgencyServiceImpl implements AgencyService {
 
 	@Override
 	public Post addPost(String agencyEmail, Post post) throws Exception {
-		Agency agency = agencyRepository.findByEmail(agencyEmail)
+				Agency agency = agencyRepository.findByEmail(agencyEmail)
 				.orElseThrow(() -> new UserNotFoundException("Agency not found with email: " + agencyEmail));
 
 		post.setStartDate(LocalDate.now());

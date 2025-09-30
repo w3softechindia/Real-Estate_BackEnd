@@ -26,17 +26,20 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.PostDto;
 import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.Post;
 import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Reviews;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.exceptions.AgencyNotFoundException;
 import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.DuplicateEntryException;
+import com.realestate.main.exceptions.PostNotFoundException;
 import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.service.AdminService;
@@ -305,6 +308,29 @@ public class AdminController {
 		return new ResponseEntity<List<Venture>>(activeVentures, HttpStatus.OK);
 
 	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@PostMapping("/adminPosts")
+	public ResponseEntity<PostDto> adminposts(@RequestParam String adminEmail,@RequestBody Post post) throws UserNotFoundException{
+		PostDto adminPosts = adminService.adminPosts(adminEmail, post);
+		return new ResponseEntity<PostDto>(adminPosts,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@GetMapping("/postsByAdmin")
+	public ResponseEntity<List<PostDto>> getAllPostsByAdmin(@RequestParam String email) throws UserNotFoundException{
+		List<PostDto> posts = adminService.getPosts(email);
+		return new ResponseEntity<List<PostDto>>(posts,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@DeleteMapping("/deleteAdminPostById")
+	public ResponseEntity<String> deleteAdminPost(@RequestParam Long id) throws PostNotFoundException{
+		String deletePost = adminService.deletePost(id);
+		return new ResponseEntity<String>(deletePost,HttpStatus.OK);
+	}
+	
+	
 
 //	@PreAuthorize("hasAnyRole('Admin','Agency','Agent')")
 //	@GetMapping("/countUnassignedPlots")

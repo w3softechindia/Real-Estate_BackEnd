@@ -1,10 +1,7 @@
 package com.realestate.main.exceptions;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Date;
-import java.util.Map;
 
-import org.springframework.dao.DataIntegrityViolationException;
+import java.util.Date;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -69,5 +66,11 @@ public class GlobalExceptionHandler {
 		ErrorDetails details=new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(PostNotFoundException.class)
+	public ResponseEntity<?> handlePostNotFound(PostNotFoundException exception,WebRequest request){
+		ErrorDetails details=new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false));
+		return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
+	} 
 
 }

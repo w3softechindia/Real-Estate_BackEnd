@@ -11,6 +11,7 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.PostDto;
 import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.TokenDto;
 import com.realestate.main.dto.VentureDto;
@@ -22,6 +23,7 @@ import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.Post;
 import com.realestate.main.entity.Reviews;
 import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Venture;
@@ -53,6 +55,7 @@ public interface UserMapper {
 
 	TokenDto toTokenDto(Token token);
 
+	PostDto toPostDto(Post post);
 	
 	
 	ReviewDto toReviewDto(Reviews reviews);

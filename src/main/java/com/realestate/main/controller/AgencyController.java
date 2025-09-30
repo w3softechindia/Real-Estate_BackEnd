@@ -57,14 +57,14 @@ public class AgencyController {
 		return new ResponseEntity<>(message, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasRole('Agency')")
+	@PreAuthorize("hasAnyRole('Admin','Agency')")
 	@PostMapping("/addPost")
 	public ResponseEntity<Post> addPost(@RequestParam String email, @RequestBody Post post) throws Exception {
 		Post savedPost = agencyService.addPost(email, post);
 		return new ResponseEntity<>(savedPost, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasRole('Agency')")
+	@PreAuthorize("hasAnyRole('Agency','Admin')")
 	@PutMapping("/updatePost/{postId}")
 	public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Post updatedPost) throws Exception {
 		Post post = agencyService.updatePost(postId, updatedPost);

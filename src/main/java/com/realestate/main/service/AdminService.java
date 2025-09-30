@@ -3,6 +3,7 @@ package com.realestate.main.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.realestate.main.dto.AdminDto;
@@ -12,17 +13,20 @@ import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
+import com.realestate.main.dto.PostDto;
 import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Plots;
+import com.realestate.main.entity.Post;
 import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Reviews;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.exceptions.AgencyNotFoundException;
 import com.realestate.main.exceptions.AgentNotFoundException;
 import com.realestate.main.exceptions.DuplicateEntryException;
+import com.realestate.main.exceptions.PostNotFoundException;
 import com.realestate.main.exceptions.PropertyNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 
@@ -108,4 +112,12 @@ public interface AdminService {
 	Reviews sendReview(String agentEmail, String agencyEmail, String reviewText);
 
 	List<ReviewDto> getReviewsByAgentEmail(String agentEmail) throws AgentNotFoundException;
+	
+	PostDto adminPosts(String adminEmail,Post post) throws UserNotFoundException;
+	
+	List<PostDto>  getPosts(String email) throws UserNotFoundException;
+	
+	String deletePost(Long id) throws PostNotFoundException;
+	
+	
 }

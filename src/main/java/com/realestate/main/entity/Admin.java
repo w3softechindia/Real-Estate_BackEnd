@@ -1,5 +1,8 @@
 package com.realestate.main.entity;
 
+import java.awt.List;
+import java.util.ArrayList;
+
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,4 +21,6 @@ public class Admin extends RealEStateUser{
 	 */
 	private static final long serialVersionUID = -40010880755397877L;
 	private String adminName;
+	
+	
 }

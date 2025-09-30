@@ -17,10 +17,12 @@ import org.springframework.stereotype.Service;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.LeadDto;
+import com.realestate.main.dto.PostDto;
 import com.realestate.main.dto.RevenueDto;
 import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.TokenDto;
 import com.realestate.main.dto.VisitDto;
+import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
@@ -39,6 +41,7 @@ import com.realestate.main.exceptions.TokenNotFoundException;
 import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.exceptions.VisitNotFoundException;
 import com.realestate.main.mapper.UserMapper;
+import com.realestate.main.repository.AdminRepository;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.LeadRepository;
@@ -59,6 +62,9 @@ public class AgentServiceImpl implements AgentService {
 
 	@Autowired
 	private AgentRepository agentRepository;
+	
+	@Autowired
+	private AdminRepository adminRepository;
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -367,6 +373,8 @@ public class AgentServiceImpl implements AgentService {
 		return reviewDto;
 		
 		}
+
+
 
 
 }
