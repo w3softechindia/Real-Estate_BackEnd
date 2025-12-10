@@ -2,7 +2,6 @@ package com.realestate.main.entity;
 
 import java.awt.List;
 import java.util.ArrayList;
-
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

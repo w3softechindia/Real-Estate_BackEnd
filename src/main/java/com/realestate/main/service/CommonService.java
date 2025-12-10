@@ -11,4 +11,6 @@ public interface CommonService {
 	boolean verifyOTP(String email, int otp) throws UserNotFoundException;
 	
 	String resetPassword(int otp,String email,String newPassword) throws UserNotFoundException;
+	
+	
 }
