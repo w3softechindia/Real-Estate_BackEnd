@@ -17,7 +17,7 @@ public class EmailUtil {
 	public void sendAgencyRegistration(String email, String password) throws Exception {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mn = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-		mn.setFrom("sricharan824@gmail.com", "RealEstate Team");
+		mn.setFrom("purnapuri14@gmail.com", "RealEstate Team");
 		mn.setTo(email);
 		mn.setSubject("Your Agency Account Credentials - RealEstate");
 
@@ -41,7 +41,7 @@ public class EmailUtil {
 	public void sendAgentRegistration(String email, String password, String agencyName) throws Exception {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mn = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-		mn.setFrom("sricharan824@gmail.com", agencyName + " Team");
+		mn.setFrom("purnapuri14@gmail.com", agencyName + " Team");
 		mn.setTo(email);
 		mn.setSubject("Agent Account Credentials -" + agencyName);
 
@@ -65,7 +65,7 @@ public class EmailUtil {
 	public void sendOtpToEmail(String email, String otp) throws MessagingException {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mn = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-		mn.setFrom("sricharan824@gmail.com");
+		mn.setFrom("purnapuri14@gmail.com");
 		mn.setTo(email);
 		mn.setSubject("Email Verification OTP");
 		String emailBody = String.format(
@@ -85,4 +85,41 @@ public class EmailUtil {
 		mn.setText(emailBody, true);
 		javaMailSender.send(mimeMessage);
 	}
+	
+	public void sendFeedbackLink(String email, String feedbackLink) throws MessagingException {
+	    MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+	    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+	    helper.setFrom("purnapuri14@gmail.com");
+	    helper.setTo(email);
+	    helper.setSubject("We’d love your feedback! 📝");
+
+	    String emailBody = """
+	        <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px; text-align: center;">
+	            <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 10px; 
+	                        box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+	                <h2 style="color: #4CAF50;">We Value Your Feedback 💬</h2>
+	                <p style="font-size: 16px;">Dear User,</p>
+	                <p style="font-size: 16px; line-height: 1.5;">
+	                    Please take a moment to share your feedback by filling out our quick form below.
+	                </p>
+	                
+	                <a href="%s" target="_blank" 
+	                   style="display: inline-block; padding: 12px 25px; background-color: #4CAF50; color: white; 
+	                          text-decoration: none; border-radius: 6px; font-size: 16px; margin-top: 15px;">
+	                    Fill Feedback Form
+	                </a>
+	                
+	                <p style="margin-top: 25px; font-size: 14px; color: #666;">
+	                    Thank you for helping us improve our services. <br>
+	                    Your feedback means a lot!
+	                </p>
+	            </div>
+	        </body>
+	        """.formatted(feedbackLink);
+
+	    helper.setText(emailBody, true);
+	    javaMailSender.send(mimeMessage);
+	}
+
 }

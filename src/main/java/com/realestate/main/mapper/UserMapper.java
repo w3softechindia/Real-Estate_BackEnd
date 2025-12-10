@@ -12,6 +12,7 @@ import com.realestate.main.dto.CustomerDto;
 import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.PostDto;
+import com.realestate.main.dto.QuotationDto;
 import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.TokenDto;
 import com.realestate.main.dto.VentureDto;
@@ -24,7 +25,9 @@ import com.realestate.main.entity.Customer;
 import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Plots;
 import com.realestate.main.entity.Post;
+import com.realestate.main.entity.Quotation;
 import com.realestate.main.entity.Reviews;
+import com.realestate.main.entity.Suspension;
 import com.realestate.main.entity.Token;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.entity.Visit;
@@ -48,6 +51,7 @@ public interface UserMapper {
 	
 	LeadDto toLeadDto(Lead lead);
 	
+	List<LeadDto> toleads(List<Lead> leads);
  
 	VisitDto toVisitDto(Visit visit);
 	
@@ -62,5 +66,7 @@ public interface UserMapper {
 	
 	List<ReviewDto>  toReviews(List<Reviews> reviews);
 
-
+    QuotationDto toQuotationDto(Quotation quotation);
+    
+    Suspension toSuspensionDto(Suspension suspension);
 }

@@ -5,23 +5,29 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.realestate.main.dto.AdminDto;
 import com.realestate.main.dto.AgencyDto;
 import com.realestate.main.dto.AgencyVentureDto;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
+import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.PostDto;
+
 import com.realestate.main.dto.ReviewDto;
+import com.realestate.main.dto.SuspensionDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.Plots;
 import com.realestate.main.entity.Post;
+
+import com.realestate.main.entity.Quotation;
+
 import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Reviews;
+import com.realestate.main.entity.Suspension;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.exceptions.AgencyNotFoundException;
 import com.realestate.main.exceptions.AgentNotFoundException;
@@ -119,5 +125,11 @@ public interface AdminService {
 	
 	String deletePost(Long id) throws PostNotFoundException;
 	
+
+	QuotationDto addQuotation(Quotation quotation);
 	
+	SuspensionDto addSuspension(Suspension suspension);
+	
+	List<LeadDto> getAllLeads();
+
 }

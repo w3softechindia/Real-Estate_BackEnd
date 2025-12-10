@@ -19,10 +19,15 @@ import com.realestate.main.dto.AgencyDto;
 import com.realestate.main.dto.AgencyVentureDto;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
+import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.PostDto;
+
+import com.realestate.main.dto.QuotationDto;
+
 import com.realestate.main.dto.ReviewDto;
+import com.realestate.main.dto.SuspensionDto;
 import com.realestate.main.dto.VentureDto;
 import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Admin;
@@ -30,12 +35,15 @@ import com.realestate.main.entity.Agency;
 import com.realestate.main.entity.AgencyVenture;
 import com.realestate.main.entity.Agent;
 import com.realestate.main.entity.Customer;
+import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Plots;
 import com.realestate.main.entity.Post;
 import com.realestate.main.entity.PropertyStatus;
+import com.realestate.main.entity.Quotation;
 import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Reviews;
 import com.realestate.main.entity.Role;
+import com.realestate.main.entity.Suspension;
 import com.realestate.main.entity.Venture;
 import com.realestate.main.excelOperations.PlotExcelService;
 import com.realestate.main.exceptions.AgencyNotFoundException;
@@ -50,8 +58,12 @@ import com.realestate.main.repository.AgencyRepository;
 import com.realestate.main.repository.AgencyVentureRepository;
 import com.realestate.main.repository.AgentRepository;
 import com.realestate.main.repository.CustomerRepository;
+import com.realestate.main.repository.LeadRepository;
 import com.realestate.main.repository.PlotsRepository;
 import com.realestate.main.repository.Postrepository;
+
+import com.realestate.main.repository.QuotationRepository;
+
 import com.realestate.main.repository.RealEstateUserRepo;
 import com.realestate.main.repository.ReviewsRepository;
 import com.realestate.main.repository.RoleRepository;
@@ -109,6 +121,12 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private AgencyVentureRepository agencyVentureRepository;
+	
+	@Autowired
+	private QuotationRepository quotationRepository;
+	
+	@Autowired
+	private LeadRepository leadRepository;
 
 	@Override
 	public void addRole() {
@@ -685,6 +703,34 @@ public class AdminServiceImpl implements AdminService {
 		return "post Deleted SuccessFully..........";
 	}
 
-	
+
+	@Override
+	public QuotationDto addQuotation(Quotation quotation) {
+		Quotation save = quotationRepository.save(quotation);
+		QuotationDto quotationDto = userMapper.toQuotationDto(save);
+		return quotationDto;
+	}
+
+	@Override
+	public SuspensionDto addSuspension(Suspension suspension) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<LeadDto> getAllLeads() {
+		List<Lead> all = leadRepository.findAll();
+		List<LeadDto> toleads = all.stream().map(userMapper::toLeadDto).collect(Collectors.toList());
+		return toleads;
+	}
+
+//	@Override
+//	public List<LeadDto> getAllLeads() {
+//		List<Lead> all = leadRepository.findAll();
+//		List<LeadDto> toleads = all.stream().map(userMapper::toLeadDto).collect(Collectors.toList());)
+//		return toleads;
+//	}
+
+
 
 }

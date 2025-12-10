@@ -24,15 +24,21 @@ import com.realestate.main.dto.AgencyDto;
 import com.realestate.main.dto.AgencyVentureDto;
 import com.realestate.main.dto.AgentDto;
 import com.realestate.main.dto.CustomerDto;
+import com.realestate.main.dto.FeedbackRequest;
+import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.PostDto;
+import com.realestate.main.dto.QuotationDto;
 import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.VentureDto;
+import com.realestate.main.emailConfiguration.EmailUtil;
 import com.realestate.main.entity.Admin;
 import com.realestate.main.entity.Agency;
+import com.realestate.main.entity.Lead;
 import com.realestate.main.entity.Plots;
 import com.realestate.main.entity.Post;
+import com.realestate.main.entity.Quotation;
 import com.realestate.main.entity.RealEStateUser;
 import com.realestate.main.entity.Reviews;
 import com.realestate.main.entity.Venture;
@@ -45,12 +51,16 @@ import com.realestate.main.exceptions.UserNotFoundException;
 import com.realestate.main.service.AdminService;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.mail.MessagingException;
 
 @RestController
 public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
+	
+	@Autowired
+	private EmailUtil emailUtil;
 
 	@PostConstruct
 	public void addRoles() {
@@ -362,4 +372,29 @@ public class AdminController {
 	public ResponseEntity<List<ReviewDto>> getReviewsForAgent(@PathVariable String agentEmail) throws AgentNotFoundException {
 		return ResponseEntity.ok(adminService.getReviewsByAgentEmail(agentEmail));
 	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@PostMapping("/addQuotation")
+	public ResponseEntity<QuotationDto> addQuotation(@RequestBody Quotation quotation){
+		QuotationDto quotation2 = adminService.addQuotation(quotation);
+		return new ResponseEntity<QuotationDto>(quotation2,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@GetMapping("findAllLeads")
+	public ResponseEntity<List<LeadDto>> findAllLeads(){
+		List<LeadDto> allLeads = adminService.getAllLeads();
+		return new ResponseEntity<List<LeadDto>>(allLeads,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('Admin')")
+	@PostMapping("/sendFeedbackLink")
+    public ResponseEntity<String> sendFeedbackLink(@RequestBody FeedbackRequest request) {
+        try {
+        	emailUtil.sendFeedbackLink(request.getEmail(), request.getFeedbackLink());
+            return ResponseEntity.ok("Feedback link sent successfully to " + request.getEmail());
+        } catch (MessagingException e) {
+            return ResponseEntity.internalServerError().body("Failed to send feedback link: " + e.getMessage());
+        }
+    }
 }
