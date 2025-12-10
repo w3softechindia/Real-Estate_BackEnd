@@ -23,7 +23,9 @@ import com.realestate.main.dto.LeadDto;
 import com.realestate.main.dto.PlotsDetailsDto;
 import com.realestate.main.dto.PlotsDto;
 import com.realestate.main.dto.PostDto;
+
 import com.realestate.main.dto.QuotationDto;
+
 import com.realestate.main.dto.ReviewDto;
 import com.realestate.main.dto.SuspensionDto;
 import com.realestate.main.dto.VentureDto;
@@ -59,7 +61,9 @@ import com.realestate.main.repository.CustomerRepository;
 import com.realestate.main.repository.LeadRepository;
 import com.realestate.main.repository.PlotsRepository;
 import com.realestate.main.repository.Postrepository;
+
 import com.realestate.main.repository.QuotationRepository;
+
 import com.realestate.main.repository.RealEstateUserRepo;
 import com.realestate.main.repository.ReviewsRepository;
 import com.realestate.main.repository.RoleRepository;
@@ -699,6 +703,7 @@ public class AdminServiceImpl implements AdminService {
 		return "post Deleted SuccessFully..........";
 	}
 
+
 	@Override
 	public QuotationDto addQuotation(Quotation quotation) {
 		Quotation save = quotationRepository.save(quotation);
@@ -726,7 +731,6 @@ public class AdminServiceImpl implements AdminService {
 //		return toleads;
 //	}
 
-	
-	
+
 
 }
