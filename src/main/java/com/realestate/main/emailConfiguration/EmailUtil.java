@@ -17,7 +17,7 @@ public class EmailUtil {
 	public void sendAgencyRegistration(String email, String password) throws Exception {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mn = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-		mn.setFrom("purnapuri14@gmail.com", "RealEstate Team");
+		mn.setFrom("w3softech45@gmail.com", "RealEstate Team");
 		mn.setTo(email);
 		mn.setSubject("Your Agency Account Credentials - RealEstate");
 
@@ -41,7 +41,7 @@ public class EmailUtil {
 	public void sendAgentRegistration(String email, String password, String agencyName) throws Exception {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mn = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-		mn.setFrom("purnapuri14@gmail.com", agencyName + " Team");
+		mn.setFrom("w3softech45@gmail.com", agencyName + " Team");
 		mn.setTo(email);
 		mn.setSubject("Agent Account Credentials -" + agencyName);
 
@@ -65,7 +65,7 @@ public class EmailUtil {
 	public void sendOtpToEmail(String email, String otp) throws MessagingException {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper mn = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-		mn.setFrom("purnapuri14@gmail.com");
+		mn.setFrom("w3softech45@gmail.com");
 		mn.setTo(email);
 		mn.setSubject("Email Verification OTP");
 		String emailBody = String.format(
@@ -90,8 +90,8 @@ public class EmailUtil {
 	    MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 	    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-	    helper.setFrom("purnapuri14@gmail.com");
-	    helper.setTo(email);
+	    helper.setFrom("w3softech45@gmail.com");
+      helper.setTo(email);
 	    helper.setSubject("We’d love your feedback! 📝");
 
 	    String emailBody = """
