@@ -91,7 +91,7 @@ public class EmailUtil {
 	    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
 	    helper.setFrom("w3softech45@gmail.com");
-	    helper.setTo(email);
+      helper.setTo(email);
 	    helper.setSubject("We’d love your feedback! 📝");
 
 	    String emailBody = """
